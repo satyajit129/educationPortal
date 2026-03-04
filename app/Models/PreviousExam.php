@@ -1,0 +1,16 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class PreviousExam extends Model
+{
+    protected $guarded = [];
+    protected $table = 'previous_exams';
+
+    public function category()
+    {
+        return $this->belongsTo(PreviousExamCategory::class, 'previous_exam_category_id');
+    }
+}
