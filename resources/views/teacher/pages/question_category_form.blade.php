@@ -45,7 +45,7 @@
             </div>
 
             <div class="form-group">
-                <button type="submit" class="btn btn-primary">{{ isset($category) ? 'আপডেট' : 'সেভ' }}</button>
+                <button type="submit" class="btn btn-primary">{{ isset($category) ? 'আপডেট করুন' : 'সংরক্ষণ করুন' }}</button>
             </div>
         </form>
     </div>

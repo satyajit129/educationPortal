@@ -24,6 +24,20 @@
                         <span class="nav-text">প্রশ্নের ক্যাটাগরি</span>
                     </a>
                 </li>
+                {{-- Year List --}}
+                @php
+                    $yearRoutes = [
+                        'yearList',
+                        'yearForm',
+                    ];
+                @endphp
+                <li class="{{ Route::is($yearRoutes) ? 'active' : '' }}">
+                    <a href="{{ route('yearList') }}" class="sidenav-item-link">
+                        <i class="mdi mdi-calendar-range"></i>
+                        <span class="nav-text">বছর সমূহ</span>
+                    </a>
+                </li>
+                {{-- Previous Exam Category --}}
                 @php
                     $previousExamCategoryRoutes = [
                         'previousExamCategoryList',

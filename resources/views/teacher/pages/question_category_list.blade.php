@@ -10,6 +10,7 @@
         <table class="table table-striped table-hover table-bordered">
             <thead>
                 <tr>
+                    {{-- <th>#</th> --}}
                     <th>নাম</th>
                     <th>প্যারেন্ট ক্যাটাগরি</th>
                     <th>অবস্থা</th>
@@ -19,6 +20,7 @@
             <tbody>
                 @forelse($categories as $cat)
                     <tr>
+                        {{-- <td>{{ $loop->iteration }}</td> --}}
                         <td>{{ $cat->name }}</td>
                         <td>{{ $cat->parent->name ?? '-' }}</td>
                         <td>

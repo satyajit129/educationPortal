@@ -7,7 +7,7 @@
             <a href="{{ route('previousExamCategoryForm') }}" class="btn btn-primary btn-sm">নতুন ক্যাটাগরি যোগ করুন</a>
         </div>
         <div class="card-body">
-            <table class="table table-striped table-bordered">
+            <table class="table table-bordered">
                 <thead>
                     <tr>
                         <th>নাম</th>
@@ -21,12 +21,13 @@
                         <tr>
                             <td>{{ $cat->name }}</td>
                             <td>
-                                <table class="table table-sm table-bordered mb-0">
-                                    <thead class="thead-light">
+                                <table class="table table-bordered table-striped table-sm mb-0">
+                                    <thead>
                                         <tr>
                                             <th>পরীক্ষার নাম</th>
                                             <th class="text-right">
-                                                <a href="{{ route('previousExamListForm',$cat->id) }}" class="btn btn-sm btn-outline-success">
+                                                <a href="{{ route('previousExamListForm', ['categoryId' => $cat->id]) }}"
+                                                    class="btn btn-sm btn-outline-success">
                                                     <i class="mdi mdi-plus"></i> পরীক্ষা যুক্ত
                                                 </a>
                                             </th>
@@ -36,11 +37,20 @@
                                     <tbody>
                                         @forelse ($cat->previousExam as $exam)
                                             <tr>
-                                                <td>{{ $exam->name }}</td>
-                                                <td class="text-center">
+                                                <td>{{ $exam->name }} - <span
+                                                        class="badge badge-outline-primary badge-pill">{{ $exam->year->title }}</span>
+                                                </td>
+                                                <td class="text-right">
                                                     {{-- Edit Button --}}
-                                                    <a href="" class="btn btn-sm btn-outline-primary">
+                                                    <a href="{{ route('previousExamListForm', ['categoryId' => $cat->id, 'examId' => $exam->id]) }}"
+                                                        class="btn btn-sm btn-outline-primary">
                                                         <i class="mdi mdi-pencil-outline"></i>
+                                                    </a>
+                                                    {{-- Delete Button --}}
+                                                    <a href="{{ route('previousExamListDelete', $exam->id) }}"
+                                                        class="btn btn-sm btn-outline-danger"
+                                                        onclick="return confirm('আপনি কি নিশ্চিত?')">
+                                                        <i class="mdi mdi-delete-outline"></i>
                                                     </a>
                                                 </td>
                                             </tr>

@@ -25,9 +25,16 @@ class TeacherPreviousExamCategoryController extends Controller
     public function previousExamCategorySave(Request $request){
         return $this->previousExamService->handlePreviousExamCategorySave($request);
     }
-
-    public function previousExamListForm($categoryId)
+    public function previousExamListForm($categoryId, $examId = null)
     {
-        return $this->previousExamService->renderPreviousExamListForm($categoryId);
+        return $this->previousExamService->renderPreviousExamListForm($categoryId, $examId);
+    }
+    public function previousExamListSave(Request $request)
+    {
+        return $this->previousExamService->handlePreviousExamListSave($request);
+    }
+    public function previousExamListDelete($examId)
+    {
+        return $this->previousExamService->handlePreviousExamListDelete($examId);
     }
 }

@@ -13,4 +13,9 @@ class PreviousExam extends Model
     {
         return $this->belongsTo(PreviousExamCategory::class, 'previous_exam_category_id');
     }
+
+    public function year()
+    {
+        return $this->belongsTo(Year::class, 'year_id');
+    }
 }

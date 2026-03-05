@@ -6,6 +6,7 @@ use App\Http\Controllers\TeacherPreviousExamCategoryController;
 use App\Http\Controllers\TeacherQuestionBuilderController;
 use App\Http\Controllers\TeacherQuestionCategoryController;
 use App\Http\Controllers\TeacherQuestionController;
+use App\Http\Controllers\YearController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('t')->group(function () {
@@ -26,8 +27,16 @@ Route::prefix('t')->group(function () {
         Route::get('/form/{id?}', [TeacherPreviousExamCategoryController::class, 'previousExamCategoryForm'])->name('previousExamCategoryForm');
         Route::post('/save', [TeacherPreviousExamCategoryController::class, 'previousExamCategorySave'])->name('previousExamCategorySave');
         Route::get('/delete/{id}', [TeacherPreviousExamCategoryController::class, 'previousExamCategoryDelete'])->name('previousExamCategoryDelete');
+        Route::get('/exam-list-form/{categoryId}/{examId?}', [TeacherPreviousExamCategoryController::class, 'previousExamListForm'])->name('previousExamListForm');
+        Route::post('/exam-list-save', [TeacherPreviousExamCategoryController::class, 'previousExamListSave'])->name('previousExamListSave');
+        Route::get('/exam-delete/{examId}', [TeacherPreviousExamCategoryController::class, 'previousExamListDelete'])->name('previousExamListDelete');
+    });
 
-        Route::get('/exam-list-form/{categoryId}', [TeacherPreviousExamCategoryController::class, 'previousExamListForm'])->name('previousExamListForm');
+    Route::prefix('year')->group(function () {
+        Route::get('/', [YearController::class, 'yearList'])->name('yearList');
+        Route::get('/form/{id?}', [YearController::class, 'yearForm'])->name('yearForm');
+        Route::post('/save', [YearController::class, 'yearSave'])->name('yearSave');
+        Route::get('/delete/{id}', [YearController::class, 'yearDelete'])->name('yearDelete');
     });
 
     Route::prefix('question')->group(function () {
