@@ -30,6 +30,9 @@ Route::prefix('t')->group(function () {
         Route::get('/exam-list-form/{categoryId}/{examId?}', [TeacherPreviousExamCategoryController::class, 'previousExamListForm'])->name('previousExamListForm');
         Route::post('/exam-list-save', [TeacherPreviousExamCategoryController::class, 'previousExamListSave'])->name('previousExamListSave');
         Route::get('/exam-delete/{examId}', [TeacherPreviousExamCategoryController::class, 'previousExamListDelete'])->name('previousExamListDelete');
+        Route::get('/add-question-form/{categoryId}/{examId}', [TeacherPreviousExamCategoryController::class, 'previousExamAddQuestionForm'])->name('previousExamAddQuestionForm');
+        Route::post('/save-exam-questions/{examId}', [TeacherPreviousExamCategoryController::class, 'savePreviousExamQuestions'])->name('savePreviousExamQuestions');
+        Route::get('/view-questions/{examId}', [TeacherPreviousExamCategoryController::class, 'viewPreviousExamQuestions'])->name('viewPreviousExamQuestions');
     });
 
     Route::prefix('year')->group(function () {
@@ -39,7 +42,7 @@ Route::prefix('t')->group(function () {
         Route::get('/delete/{id}', [YearController::class, 'yearDelete'])->name('yearDelete');
         Route::get('/add-question-form/{id?}', [YearController::class, 'yearAddQuestionForm'])->name('yearAddQuestionForm');
         Route::post('/save-year-questions/{id}', [YearController::class, 'saveYearQuestions'])->name('saveYearQuestions');
-        
+        Route::get('/view-questions/{id}', [YearController::class, 'viewYearQuestions'])->name('viewYearQuestions');
     });
 
     Route::prefix('question')->group(function () {

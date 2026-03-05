@@ -13,7 +13,6 @@ class TeacherPreviousExamCategoryController extends Controller
     {
         $this->previousExamService = $previousExamService;
     }
-
     public function previousExamCategoryList()
     {
         return $this->previousExamService->renderPreviousExamCategoryList();
@@ -36,5 +35,17 @@ class TeacherPreviousExamCategoryController extends Controller
     public function previousExamListDelete($examId)
     {
         return $this->previousExamService->handlePreviousExamListDelete($examId);
+    }
+    public function previousExamAddQuestionForm($categoryId, $examId)
+    {
+        return $this->previousExamService->renderPreviousExamAddQuestionForm($categoryId, $examId);
+    }
+    public function savePreviousExamQuestions(Request $request, $examId)
+    {
+        return $this->previousExamService->handleSavePreviousExamQuestions($request, $examId);
+    }
+    public function viewPreviousExamQuestions($examId)
+    {
+        return $this->previousExamService->renderViewPreviousExamQuestions($examId);
     }
 }

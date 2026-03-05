@@ -25,7 +25,10 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $year->title }}</td>
-                                <td> <a href="{{ route('yearAddQuestionForm', $year->id) }}" class="btn btn-sm btn-outline-primary"><i class="mdi mdi-plus-circle-outline"></i></a></td>
+                                <td>
+                                    <a href="{{ route('yearAddQuestionForm', $year->id) }}" class="btn btn-sm btn-outline-primary"><i class="mdi mdi-plus-circle-outline"></i></a>
+                                    <a href="{{ route('viewYearQuestions', $year->id) }}" class="badge badge-outline-info badge-pill">মোট নির্বাচিত প্রশ্নসমূহ - {{ $year->questions_count }}</a>
+                                </td>
                                 <td>
                                     <a href="{{ route('yearForm', $year->id) }}" class="btn btn-sm btn-outline-primary">
                                         <i class="mdi mdi-pencil-outline"></i>

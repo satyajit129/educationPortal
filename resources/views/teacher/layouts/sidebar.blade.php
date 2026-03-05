@@ -26,10 +26,7 @@
                 </li>
                 {{-- Year List --}}
                 @php
-                    $yearRoutes = [
-                        'yearList',
-                        'yearForm',
-                    ];
+                    $yearRoutes = ['yearList', 'yearForm', 'yearAddQuestionForm','viewYearQuestions'];
                 @endphp
                 <li class="{{ Route::is($yearRoutes) ? 'active' : '' }}">
                     <a href="{{ route('yearList') }}" class="sidenav-item-link">
@@ -42,7 +39,9 @@
                     $previousExamCategoryRoutes = [
                         'previousExamCategoryList',
                         'previousExamCategoryForm',
-                        'previousExamListForm'
+                        'previousExamListForm',
+                        'viewPreviousExamQuestions',
+                        'previousExamAddQuestionForm'
                     ];
                 @endphp
                 {{-- Previous Exam Category --}}

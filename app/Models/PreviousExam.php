@@ -18,4 +18,9 @@ class PreviousExam extends Model
     {
         return $this->belongsTo(Year::class, 'year_id');
     }
+
+    public function questions()
+    {
+        return $this->belongsToMany(Question::class,'previous_exam_questions');
+    }
 }

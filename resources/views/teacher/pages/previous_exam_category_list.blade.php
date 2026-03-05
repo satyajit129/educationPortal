@@ -22,9 +22,9 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th style="width: 30%;">নাম</th>
-                            <th style="width: 50%;">পরীক্ষাসমূহ</th>
-                            <th style="width: 10%;">অবস্থা</th>
+                            <th style="width: 25%;">নাম</th>
+                            <th style="width: 65%;">পরীক্ষাসমূহ</th>
+                            {{-- <th style="width: 10%;">অবস্থা</th> --}}
                             <th style="width: 10%;">অ্যাকশন</th>
                         </tr>
                     </thead>
@@ -50,17 +50,28 @@
                                             @forelse ($cat->previousExam as $exam)
                                                 <tr>
                                                     <td>{{ $exam->name }} - <span
-                                                            class="badge badge-outline-primary badge-pill">{{ $exam->year->title }}</span>
+                                                            class="badge badge-outline-primary badge-pill">{{ $exam->year->title }} </span>
+                                                            <a href="{{ route('viewPreviousExamQuestions', $exam->id) }}" title="View Questions">
+                                                                <span class="badge badge-outline-secondary badge-pill">{{ $exam->questions_count }} টি প্রশ্ন <i class="mdi mdi-eye"></i> </span> 
+                                                            </a>
+                                                            
                                                     </td>
                                                     <td class="text-right">
+                                                        {{-- Add Question Button --}}
+                                                        <a href="{{ route('previousExamAddQuestionForm', ['categoryId' => $cat->id, 'examId' => $exam->id]) }}"
+                                                            class="btn btn-sm btn-outline-info" title="Add Question">
+                                                            <i class="mdi mdi-plus"></i>
+                                                        </a>
+
                                                         {{-- Edit Button --}}
                                                         <a href="{{ route('previousExamListForm', ['categoryId' => $cat->id, 'examId' => $exam->id]) }}"
-                                                            class="btn btn-sm btn-outline-primary">
+                                                            class="btn btn-sm btn-outline-primary" title="Edit Exam">
                                                             <i class="mdi mdi-pencil-outline"></i>
                                                         </a>
+
                                                         {{-- Delete Button --}}
                                                         <a href="{{ route('previousExamListDelete', $exam->id) }}"
-                                                            class="btn btn-sm btn-outline-danger"
+                                                            class="btn btn-sm btn-outline-danger" title="Delete Exam"
                                                             onclick="return confirm('আপনি কি নিশ্চিত?')">
                                                             <i class="mdi mdi-delete-outline"></i>
                                                         </a>
@@ -76,7 +87,7 @@
                                         </tbody>
                                     </table>
                                 </td>
-                                <td>
+                                {{-- <td>
                                     @if ($cat->status == '1')
                                         <span class="badge badge-outline-success badge-square">
                                             <i class="mdi mdi-check"></i>
@@ -86,7 +97,7 @@
                                             <i class="mdi mdi-close"></i>
                                         </span>
                                     @endif
-                                </td>
+                                </td> --}}
                                 <td>
                                     <a href="{{ route('previousExamCategoryForm', $cat->id) }}"
                                         class="btn btn-sm btn-primary">

@@ -10,7 +10,7 @@ class YearService
 {
     public function renderYearList()
     {
-        $years = Year::all();
+        $years = Year::withCount('questions')->get();
         return view('teacher.pages.year_list', compact('years'));
     }
     public function renderYearForm($id = null)
@@ -43,31 +43,54 @@ class YearService
     {
         $year = Year::with('questions:id')->findOrFail($id);
 
-            $questions = Question::with('options')
-        ->latest()
-        ->paginate(50);
+        $questions = Question::with('options')
+            ->latest()
+            ->paginate(40);
 
-    $selectedQuestions = DB::table('year_question')
-        ->where('year_id', $id)
-        ->pluck('question_id')
-        ->toArray();
+        $selectedQuestions = DB::table('year_question')
+            ->where('year_id', $id)
+            ->pluck('question_id')
+            ->toArray();
 
         return view('teacher.pages.year_add_question_form', compact('id', 'year', 'questions', 'selectedQuestions'));
     }
+
     public function handleSaveYearQuestions($request, $id)
     {
-            $year = Year::findOrFail($id);
+        $year = Year::findOrFail($id);
 
-    $questions = $request->questions ?? [];
+        $selected = $request->questions ?? [];
+        $currentPage = $request->page ?? 1;
+        $perPage = 40;
 
-    $year->questions()->syncWithoutDetaching($questions);
+        // Correctly get current page questions
+        $pageQuestionIds = Question::latest()
+            ->forPage($currentPage, $perPage)
+            ->pluck('id')
+            ->toArray();
 
-    return redirect()->route(
-        'yearAddQuestionForm',
-        [
+        // Existing year questions
+        $existing = $year->questions()->pluck('question_id')->toArray();
+
+        // Remove current page questions from existing
+        $remaining = array_diff($existing, $pageQuestionIds);
+
+        // Merge remaining + newly selected
+        $final = array_merge($remaining, $selected);
+
+        $year->questions()->sync($final);
+
+        // Redirect to the same page
+        return redirect()->route('yearAddQuestionForm', [
             'id' => $id,
-            'page' => $request->page
-        ]
-    );
+            'page' => $currentPage
+        ]);
+    }
+
+    public function renderViewYearQuestions($id)
+    {
+        $year = Year::with('questions.options')->findOrFail($id);
+        $questions = Question::whereIn('id', $year->questions->pluck('id'))->with('options')->paginate(20);
+        return view('teacher.pages.view_year_questions', compact('year', 'questions'));
     }
 }

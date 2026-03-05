@@ -37,4 +37,8 @@ class YearController extends Controller
     {
         return $this->yearService->handleSaveYearQuestions($request, $id);
     }
+    public function viewYearQuestions($id)
+    {
+        return $this->yearService->renderViewYearQuestions($id);
+    }
 }
