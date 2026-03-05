@@ -37,6 +37,9 @@ Route::prefix('t')->group(function () {
         Route::get('/form/{id?}', [YearController::class, 'yearForm'])->name('yearForm');
         Route::post('/save', [YearController::class, 'yearSave'])->name('yearSave');
         Route::get('/delete/{id}', [YearController::class, 'yearDelete'])->name('yearDelete');
+        Route::get('/add-question-form/{id?}', [YearController::class, 'yearAddQuestionForm'])->name('yearAddQuestionForm');
+        Route::post('/save-year-questions/{id}', [YearController::class, 'saveYearQuestions'])->name('saveYearQuestions');
+        
     });
 
     Route::prefix('question')->group(function () {

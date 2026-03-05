@@ -96,7 +96,7 @@ class QuestionService
     }
     public function renderQuestionImportExcel()
     {
-        $categories = QuestionCategory::where('status', 'active')->get();
+        $categories = QuestionCategory::where('status', '1')->get();
         return view('teacher.pages.question_import_excel', compact('categories'));
     }
     public function renderQuestionExcel()

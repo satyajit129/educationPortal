@@ -29,4 +29,12 @@ class YearController extends Controller
     {
         return $this->yearService->handleYearDelete($id);
     }
+    public function yearAddQuestionForm($id)
+    {
+        return $this->yearService->renderYearAddQuestionForm($id);
+    }
+    public function saveYearQuestions(Request $request, $id)
+    {
+        return $this->yearService->handleSaveYearQuestions($request, $id);
+    }
 }

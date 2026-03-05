@@ -11,7 +11,7 @@ class QuestionCategoryService
 {
     public function renderQuestionCategoryList()
     {
-        $categories = QuestionCategory::with('parent')->latest()->get();
+        $categories = QuestionCategory::with('parent')->latest()->paginate(20);
         return view('teacher.pages.question_category_list', compact('categories'));
     }
 
@@ -31,7 +31,7 @@ class QuestionCategoryService
                 'status' => 'required|in:1,0',
             ]);
 
-            QuestionCategory::updateOrCreate(
+            $category = QuestionCategory::updateOrCreate(
                 ['id' => $id],
                 [
                     'name' => $request->name,
@@ -43,9 +43,23 @@ class QuestionCategoryService
                 ]
             );
 
-            return redirect()->route('questionCategoryList')->with('success', 'Category saved successfully.');
+            // 🔹 Session Logic
+            if ($id) {
+                // Edit mode → remove previous session
+                session()->forget('last_parent_category_id');
+            } else {
+                // Create mode → store last selected parent
+                session(['last_parent_category_id' => $request->parent_category_id]);
+            }
+
+            return redirect()
+                ->route('questionCategoryList')
+                ->with('success', 'Category saved successfully.');
         } catch (\Throwable $th) {
-            return redirect()->back()->with('error', $th->getMessage())->withInput();
+            return redirect()
+                ->back()
+                ->with('error', $th->getMessage())
+                ->withInput();
         }
     }
 

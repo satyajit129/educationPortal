@@ -16,7 +16,7 @@
                 </div>
                 <div class="form-group">
                     <label for="year_id">বছর</label>
-                    <select name="year_id" id="year_id" class="form-control" required>
+                    <select name="year_id" id="year_id" class="form-control select2" required>
                         <option value="">বছর নির্বাচন করুন</option>
                         @foreach ($years as $year)
                             <option value="{{ $year->id }}" {{ old('year_id', $exam->year_id ?? '') == $year->id ? 'selected' : '' }}>
@@ -29,4 +29,13 @@
             </form>
         </div>
     </div>
+@endsection
+
+@section('teacher_custom_js')
+    <script>
+        $('.select2').select2({
+            placeholder: "নির্বাচন করুন",
+            width: '100%'
+        });
+    </script>
 @endsection

@@ -11,30 +11,22 @@
             </div>
         </div>
         <div class="card-body">
-            <div class="table-reponsive">
+            <div class="table-responsive">
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr>
                             <th>#</th>
                             <th>শিরোনাম</th>
                             <th>ক্যাটাগরি</th>
-                            <th>অবস্থা</th>
                             <th>অ্যাকশন</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($questions as $q)
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
+                               <td>{{ $questions->firstItem() + $loop->index }}</td>
                                 <td>{!! Str::limit($q->question_text, 80) !!}</td>
                                 <td>{{ $q->category->name ?? '-' }}</td>
-                                <td>
-                                    @if ($q->status == 'active')
-                                        <span class="badge badge-success badge-pill">সক্রিয়</span>
-                                    @else
-                                        <span class="badge badge-danger badge-pill">নিষ্ক্রিয়</span>
-                                    @endif
-                                </td>
                                 <td>
                                     <a href="{{ route('questionForm', $q->id) }}"
                                         class="btn btn-sm btn-warning">সম্পাদনা</a>
@@ -49,8 +41,9 @@
                         @endforelse
                     </tbody>
                 </table>
+                {{ $questions->links() }}
             </div>
-            {{ $questions->links() }}
+            
         </div>
     </div>
 @endsection

@@ -16,6 +16,7 @@
                         <tr>
                             <th>#</th>
                             <th>বছর</th>
+                            <th>প্রশ্ন সমূহ </th>
                             <th>অ্যাকশন</th>
                         </tr>
                     </thead>
@@ -24,6 +25,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $year->title }}</td>
+                                <td> <a href="{{ route('yearAddQuestionForm', $year->id) }}" class="btn btn-sm btn-outline-primary"><i class="mdi mdi-plus-circle-outline"></i></a></td>
                                 <td>
                                     <a href="{{ route('yearForm', $year->id) }}" class="btn btn-sm btn-outline-primary">
                                         <i class="mdi mdi-pencil-outline"></i>

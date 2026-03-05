@@ -47,22 +47,6 @@ class TeacherQuestionController extends Controller
     {
         return $this->questionService->handleQuestionUploadExcel($request);
     }
-    // Fetch questions by category (AJAX request)
-    public function getQuestionsByCategory(Request $request)
-    {
-        $category = QuestionCategory::findOrFail($request->category_id);
-        $categoryIds = $this->getAllCategoryIds($category);
-
-        $questions = Question::whereIn('category_id', $categoryIds)
-            ->with('options')
-            ->paginate(10);
-
-        // Receive previously selected question IDs
-        $selectedIds = $request->selected_ids ?? [];
-
-        // Return partial view
-        return view('teacher.pages.partials.questions_list', compact('questions', 'selectedIds'))->render();
-    }
     public function viewSelectedQuestions(Request $request)
     {
         $ids = explode(',', $request->ids ?? []);

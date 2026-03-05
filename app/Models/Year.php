@@ -8,5 +8,8 @@ class Year extends Model
 {
     protected $guarded = [];
 
-    
+    public function questions()
+    {
+        return $this->belongsToMany(Question::class, 'year_question');
+    }
 }

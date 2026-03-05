@@ -17,4 +17,8 @@ class Question extends Model
     {
         return $this->belongsTo(QuestionCategory::class, 'category_id');
     }
+    public function years()
+    {
+        return $this->belongsToMany(Year::class, 'year_question');
+    }
 }
