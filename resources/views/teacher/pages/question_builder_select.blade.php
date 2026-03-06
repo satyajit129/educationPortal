@@ -51,6 +51,9 @@
         ul.list-unstyled li label p {
             margin: 0;
         }
+        .nav-item:hover {
+            cursor: pointer;
+        }
     </style>
 @endsection
 
@@ -60,38 +63,31 @@
             <h2 class="card-title mb-0">প্রশ্ন বিল্ডার</h2>
         </div>
         <div class="card-body">
-            <form id="questionBuilderForm" method="POST" action="{{ route('loadQuestions') }}">
-                @csrf
-                <div class="row">
-                    <div class="col-lg-5">
-                        <label class="form-label">বিষয় নির্বাচন করুন</label>
-                        <select name="subject_ids[]" multiple class="form-control select2" id="subject_ids">
-                            @foreach ($subjects as $subject)
-                                <option value="{{ $subject->id }}">{{ $subject->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+            <ul class="nav nav-pills mb-3">
 
-                    <div class="col-lg-7">
-                        <label>অধ্যায় নির্বাচন করুন</label>
-                        <div class="tree-select-wrapper">
-                            <div class="tree-select-input" id="treeSelectToggle">
-                                <span id="treeSelectText">Select Chapters</span>
-                                <span class="arrow">▼</span>
-                            </div>
-                            <div class="tree-select-dropdown" id="treeSelectDropdown">
-                                <input type="text" id="treeSearch" class="form-control tree-search"
-                                    placeholder="Search...">
-                                <div id="chapterTree"></div>
-                            </div>
-                        </div>
-                    </div>
+                <li class="nav-item">
+                    <a class="nav-link tab-link" data-type="year">
+                        <i class="mdi mdi-calendar"></i> সাল ভিত্তিক
+                    </a>
+                </li>
 
-                    <input type="hidden" name="child_chapter_ids" id="selectedChapters">
-                </div>
+                <li class="nav-item">
+                    <a class="nav-link tab-link" data-type="job_solution">
+                        <i class="mdi mdi-briefcase-outline"></i> জবসলুশন ভিত্তিক
+                    </a>
+                </li>
 
-                <button type="submit" class="btn btn-primary mt-3">সাবমিট করুন </button>
-            </form>
+                <li class="nav-item">
+                    <a class="nav-link tab-link" data-type="subjectWise">
+                        <i class="mdi mdi-book-open-page-variant"></i> বিষয় ভিত্তিক
+                    </a>
+                </li>
+
+            </ul>
+
+            <div id="tabContentArea">
+                {{-- ajax content load here --}}
+            </div>
         </div>
     </div>
     <!-- ================= QUESTIONS ================= -->
@@ -113,13 +109,13 @@
             style="position: fixed; bottom: 40px; right: 20px; background: #007bff; color: #fff; z-index: 1000; cursor: pointer; min-width: 220px;">
 
             <span id="selectedCount">{{ count(session('selected_questions', [])) }} টি প্রশ্ন নির্বাচিত</span>
-                <form action="{{ route('createExam') }}" method="post">
-                    @csrf
-                    <button id="createQuestionsBtn" class="btn btn-light btn-sm ms-2">
-                        প্রশ্ন তৈরি
-                    </button>
-                </form>
-            
+            <form action="{{ route('createExam') }}" method="post">
+                @csrf
+                <button id="createQuestionsBtn" class="btn btn-light btn-sm ms-2">
+                    প্রশ্ন তৈরি
+                </button>
+            </form>
+
         </div>
     </div>
 @endsection
@@ -128,202 +124,62 @@
     <!-- JSTree JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.min.js"></script>
 
-    <!-- Select2 JS -->
-    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js"></script> --}}
 
     <script>
-        $(document).ready(function() {
-            // Select2 init
-            $('.select2').select2({
-                placeholder: "বিষয় নির্বাচন করুন",
-                width: '100%'
-            });
+    $(document).ready(function() {
 
-            // Toggle dropdown
-            $('#treeSelectToggle').on('click', function() {
-                $('#treeSelectDropdown').toggle();
-            });
-            $(document).on('click', function(e) {
-                if (!$(e.target).closest('.tree-select-wrapper').length) {
-                    $('#treeSelectDropdown').hide();
-                }
-            });
-
-            // Load JSTree JSON
-            function loadTree(subjectIDs) {
-                if (!subjectIDs || !subjectIDs.length) {
-                    $('#chapterTree').jstree('destroy').empty();
-                    return;
-                }
-
-                $.ajax({
-                    url: "{{ route('loadChapters') }}",
-                    type: "GET",
-                    data: {
-                        subject_ids: subjectIDs
-                    },
-                    success: function(data) {
-                        $('#chapterTree').jstree('destroy'); // destroy old tree
-                        $('#chapterTree').jstree({
-                            'core': {
-                                'themes': {
-                                    'icons': false
-                                },
-                                'data': data
-                            },
-                            'plugins': ['checkbox', 'search', 'wholerow'],
-                            'checkbox': {
-                                'three_state': true,
-                                'cascade': 'up+down'
-                            }
-                        });
-                        // <-- Open all nodes initially
-                        $('#chapterTree').on('ready.jstree', function() {
-                            $(this).jstree('open_all');
-                        });
-                    },
-                    error: function(xhr) {
-                        console.error('AJAX error', xhr);
-                    }
-                });
-            }
-
-            loadTree($('#subject_ids').val());
-            $('#subject_ids').on('change', function() {
-                loadTree($(this).val());
-            });
-
-            // Search
-            var to = false;
-            $('#treeSearch').on('keyup', function() {
-                if (to) clearTimeout(to);
-                to = setTimeout(function() {
-                    $('#chapterTree').jstree(true)?.search($('#treeSearch').val());
-                }, 250);
-            });
-
-            // Submit selected chapters
-            $('form').on('submit', function() {
-
-                if (!$('#chapterTree').jstree(true)) {
-                    $('#selectedChapters').val('');
-                    return true;
-                }
-
-                var nodes = $('#chapterTree').jstree(true).get_checked(true);
-
-                var ids = nodes.map(function(node) {
-                    return node.id.replace('chapter_', '');
-                });
-
-                $('#selectedChapters').val(ids.join(','));
-            });
-        });
-    </script>
-
-    <script>
-        /* ================= SUBMIT FORM ================= */
-        $('#questionBuilderForm').on('submit', function(e) {
-            e.preventDefault();
-
-            let tree = $('#chapterTree').jstree(true);
-            if (!tree) {
-                alert('অধ্যায় নির্বাচন করুন');
-                return;
-            }
-
-            let ids = tree.get_checked(true).map(n => n.id.replace('chapter_', ''));
-            $('#selectedChapters').val(ids.join(','));
-
-            loadQuestions("{{ route('loadQuestions') }}", $(this).serialize());
-        });
-
-        /* ================= PAGINATION ================= */
-        $(document).on('click', '#questionListContainer .pagination a', function(e) {
-            e.preventDefault();
-            loadQuestions($(this).attr('href'), $('#questionBuilderForm').serialize());
-        });
-
-        /* ================= LOAD QUESTIONS ================= */
-        function loadQuestions(url, data) {
+        function loadTab(type) {
             $.ajax({
-                url: url,
-                type: "POST",
-                data: data,
-                beforeSend() {
-                    $('#questionListContainer').html(
-                        '<div class="text-center text-muted py-4">Loading questions...</div>'
-                    );
+                url: "{{ route('builderQuestionType') }}",
+                type: "GET",
+                data: { type: type },
+                beforeSend: function() {
+                    // Show preloader while loading
+                    $("#tabContentArea").html(`
+                        <div class="text-center py-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden"></span>
+                            </div>
+                        </div>
+                    `);
                 },
-                success(html) {
-                    $('#questionListContainer').html(html);
+                success: function(response) {
+                    $("#tabContentArea").html(response);
+
+                    // Re-init select2 if needed
+                    $('.select2').select2({
+                        placeholder: "বিষয় নির্বাচন করুন",
+                        width: '100%'
+                    });
                 },
-                error() {
-                    alert('প্রশ্ন লোড করা যায়নি');
+                error: function() {
+                    $("#tabContentArea").html('<div class="text-center text-danger py-4">Content could not be loaded.</div>');
                 }
             });
         }
 
-        /* ================= CHECKBOX CHANGE ================= */
-        $(document).on('change', '.select-question-checkbox', function() {
-            let checkbox = $(this);
+        // First load
+        const params = new URLSearchParams(window.location.search);
+        let type = params.get('type') ?? 'year';
 
-            $.post("{{ route('toggleQuestion') }}", {
-                _token: "{{ csrf_token() }}",
-                question_id: checkbox.val(),
-                checked: checkbox.is(':checked')
-            }, function(res) {
-                updateFloatingCount(res.count);
-            });
+        loadTab(type);
+        $('.tab-link[data-type="' + type + '"]').addClass('active');
+
+        // Click event
+        $('.tab-link').click(function() {
+
+            $('.tab-link').removeClass('active');
+            $(this).addClass('active');
+
+            let type = $(this).data('type');
+
+            // URL change
+            const newUrl = window.location.pathname + '?type=' + type;
+            window.history.pushState(null, '', newUrl);
+
+            loadTab(type);
         });
 
-
-        /* ================= SELECT ALL (THIS PAGE) ================= */
-/* ================= SELECT ALL ================= */
-$('#selectAllQuestions').on('click', function() {
-    let allIds = [];
-    $('.select-question-checkbox').each(function() {
-        if (!this.checked) {
-            this.checked = true; // check it visually
-            allIds.push($(this).val());
-        }
     });
-
-    if(allIds.length){
-        $.post("{{ route('toggleQuestion') }}", {
-            _token: "{{ csrf_token() }}",
-            question_ids: allIds, // send array
-            checked: true
-        }, function(res) {
-            updateFloatingCount(res.count);
-        });
-    }
-});
-
-/* ================= UNSELECT ALL ================= */
-$('#unselectAllQuestions').on('click', function() {
-    let allIds = [];
-    $('.select-question-checkbox').each(function() {
-        if (this.checked) {
-            this.checked = false; // uncheck visually
-            allIds.push($(this).val());
-        }
-    });
-
-    if(allIds.length){
-        $.post("{{ route('toggleQuestion') }}", {
-            _token: "{{ csrf_token() }}",
-            question_ids: allIds,
-            checked: false
-        }, function(res) {
-            updateFloatingCount(res.count);
-        });
-    }
-});
-    </script>
-    <script>
-        function updateFloatingCount(count) {
-            $('#selectedCount').text(count + ' টি প্রশ্ন নির্বাচিত');
-        }
-    </script>
+</script>
 @endsection

@@ -36,4 +36,9 @@ class TeacherQuestionBuilderController extends Controller
     {
         return $this->questionBuilderService->handleCreateExam($request);
     }
+
+    public function builderQuestionType(Request $request)
+    {
+        return $this->questionBuilderService->handleBuilderQuestionType($request);
+    }
 }

@@ -2,18 +2,23 @@
 
 namespace App\Services\Teacher;
 
+use App\Models\PreviousExamCategory;
 use App\Models\Question;
 use App\Models\QuestionCategory;
+use App\Models\Year;
+use App\Traits\HandlesQuestionBuilderType;
 use Illuminate\Support\Facades\Auth;
 
 class QuestionBuilderService
 {
+    use HandlesQuestionBuilderType;
     public function renderSelectExamQuestion($request, $questions = null)
     {
         if ($request->isMethod('get')) {
             session()->forget('selected_questions');
         }
         //dd($questions);
+
         $subjects = QuestionCategory::whereNull('parent_category_id')->get();
         return view('teacher.pages.question_builder_select', compact('subjects', 'questions'));
     }
@@ -45,6 +50,15 @@ class QuestionBuilderService
     }
     public function handleLoadQuestions($request)
     {
+        // dd($request->all());
+        if ($request->type == 'year') {
+            $categoryIds = Year::find($request->year_id)->pluck('id')->toArray();
+        } elseif ($request->type == 'job_solution') {
+            $categoryIds = PreviousExamCategory::find($request->category_id)->pluck('id')->toArray();
+        } else {
+            $categoryIds = QuestionCategory::whereIn('parent_category_id', $request->subject_id)->pluck('id')->toArray();
+        }
+        dd($categoryIds);
         $chapterIds = array_filter(explode(',', $request->child_chapter_ids));
         $questions = Question::with('options')
             ->whereIn('category_id', $chapterIds)
@@ -90,4 +104,22 @@ class QuestionBuilderService
         $exam->save();
         return view('teacher.pages.exam_preview', compact('questions', 'exam'));
     }
+
+    // builder functions 
+
+    public function handleBuilderQuestionType($request)
+    {
+        $type = $request->type ?? 'year';
+
+        switch ($type) {
+            case 'job_solution':
+                return $this->loadJobSolution();
+            case 'subjectWise':
+                return $this->loadsubjectWise();
+            case 'year':
+            default:
+                return $this->loadYear();
+        }
+    }
+
 }
