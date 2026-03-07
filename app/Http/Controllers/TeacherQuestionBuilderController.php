@@ -14,31 +14,8 @@ class TeacherQuestionBuilderController extends Controller
     {
         $this->questionBuilderService = $questionBuilderService;
     }
-    public function selectExamQuestion(Request $request, $questions = null)
+    public function selectExamQuestion(Request $request)
     {
-        return $this->questionBuilderService->renderSelectExamQuestion($request, $questions);
-    }
-
-    public function loadChapters(Request $request)
-    {
-        return $this->questionBuilderService->handleLoadChapters($request);
-    }
-
-    public function loadQuestions(Request $request)
-    {
-        return $this->questionBuilderService->handleLoadQuestions($request);
-    }
-    public function toggleQuestion(Request $request)
-    {
-        return $this->questionBuilderService->handleToggleQuestion($request);
-    }
-    public function createExam(Request $request)
-    {
-        return $this->questionBuilderService->handleCreateExam($request);
-    }
-
-    public function builderQuestionType(Request $request)
-    {
-        return $this->questionBuilderService->handleBuilderQuestionType($request);
+        return $this->questionBuilderService->renderSelectExamQuestion($request);
     }
 }

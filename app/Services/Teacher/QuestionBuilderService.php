@@ -12,114 +12,29 @@ use Illuminate\Support\Facades\Auth;
 class QuestionBuilderService
 {
     use HandlesQuestionBuilderType;
-    public function renderSelectExamQuestion($request, $questions = null)
+    public function renderSelectExamQuestion($request)
     {
-        if ($request->isMethod('get')) {
-            session()->forget('selected_questions');
-        }
-        //dd($questions);
+        $questions = null;
+        $type = $request->input('type', 'year');
+        $tabData = [];
+        if ($type == 'year') {
+            $tabData['years'] = Year::all();
 
-        $subjects = QuestionCategory::whereNull('parent_category_id')->get();
-        return view('teacher.pages.question_builder_select', compact('subjects', 'questions'));
-    }
-    public function handleLoadChapters($request)
-    {
-        $subjectIds = $request->subject_ids ?? [];
-
-        // Get categories where parent_category_id is one of the selected subjects
-        $categories = QuestionCategory::whereIn('parent_category_id', $subjectIds)
-            ->with('children') // Make sure 'children' relation is defined
-            ->select('id', 'parent_category_id', 'name')
-            ->get();
-
-        // Convert to JSTree format
-        $tree = $this->buildJSTree($categories);
-
-        return response()->json($tree);
-    }
-
-    protected function buildJSTree($categories)
-    {
-        return $categories->map(function ($cat) {
-            return [
-                'id' => 'chapter_' . $cat->id,   // important: prefix for JS
-                'text' => $cat->name,
-                'children' => $cat->children->count() ? $this->buildJSTree($cat->children) : false,
-            ];
-        });
-    }
-    public function handleLoadQuestions($request)
-    {
-        // dd($request->all());
-        if ($request->type == 'year') {
-            $categoryIds = Year::find($request->year_id)->pluck('id')->toArray();
-        } elseif ($request->type == 'job_solution') {
-            $categoryIds = PreviousExamCategory::find($request->category_id)->pluck('id')->toArray();
-        } else {
-            $categoryIds = QuestionCategory::whereIn('parent_category_id', $request->subject_id)->pluck('id')->toArray();
-        }
-        dd($categoryIds);
-        $chapterIds = array_filter(explode(',', $request->child_chapter_ids));
-        $questions = Question::with('options')
-            ->whereIn('category_id', $chapterIds)
-            ->paginate(25);
-        $selectedQuestions = session('selected_questions', []);
-        return view('teacher.pages.partials.question_list', compact('questions', 'selectedQuestions'));
-    }
-    public function handleToggleQuestion($request)
-    {
-        $checked = filter_var($request->checked, FILTER_VALIDATE_BOOLEAN);
-        $selected = session()->get('selected_questions', []);
-        $questionIds = $request->question_ids ?? [$request->question_id];
-        foreach ($questionIds as $questionId) {
-            $questionId = (int)$questionId;
-            if ($checked) {
-                if (!in_array($questionId, $selected)) {
-                    $selected[] = $questionId;
-                }
-            } else {
-                $selected = array_values(array_diff($selected, [$questionId]));
+            if ($request->has('year_id') && !empty($request->input('year_id'))) {
+                $yearIds = $request->input('year_id');
+                $questions = Question::with('years')
+                    ->whereHas('years', function ($query) use ($yearIds) {
+                        $query->whereIn('year_id', $yearIds);
+                    })
+                    ->paginate(2)
+                    ->withQueryString();
             }
+        } elseif ($type == 'job_solution') {
+            $tabData['categories'] = PreviousExamCategory::all();
+        } elseif ($type == 'subjectWise') {
+            $tabData['subjects'] = QuestionCategory::whereNull('parent_category_id')->get();
         }
-        session(['selected_questions' => $selected]);
-        return response()->json([
-            'count' => count($selected),
-            'selected' => $selected
-        ]);
+
+        return view('teacher.pages.question_builder_select', compact('type', 'tabData', 'questions'));
     }
-
-    public function handleCreateExam($request)
-    {
-        // dd($request->all());
-        $selectedQuestions = session('selected_questions', []);
-        // dd($selectedQuestions);
-        if (empty($selectedQuestions)) {
-            return redirect()->back()->with('error', 'No questions selected for the exam.');
-        }
-        $questions = Question::with('options')->whereIn('id', $selectedQuestions)->paginate(10);
-        // dd($questions);
-        $exam = new \App\Models\Exam();
-        $exam->title = 'Exam ' . now()->format('Y-m-d H:is');
-        $exam->created_by = Auth::id();
-        $exam->save();
-        return view('teacher.pages.exam_preview', compact('questions', 'exam'));
-    }
-
-    // builder functions 
-
-    public function handleBuilderQuestionType($request)
-    {
-        $type = $request->type ?? 'year';
-
-        switch ($type) {
-            case 'job_solution':
-                return $this->loadJobSolution();
-            case 'subjectWise':
-                return $this->loadsubjectWise();
-            case 'year':
-            default:
-                return $this->loadYear();
-        }
-    }
-
 }
