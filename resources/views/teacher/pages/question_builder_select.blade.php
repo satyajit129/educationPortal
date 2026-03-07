@@ -64,32 +64,8 @@
             <h2 class="card-title mb-0">প্রশ্ন বিল্ডার</h2>
         </div>
         <div class="card-body">
-            {{-- <ul class="nav nav-pills mb-3">
-
-                <li class="nav-item">
-                    <a href="?type=year" class="nav-link {{ $type == 'year' ? 'active' : '' }}">
-                        <i class="mdi mdi-calendar"></i> সাল ভিত্তিক
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="?type=job_solution" class="nav-link {{ $type == 'job_solution' ? 'active' : '' }}">
-                        <i class="mdi mdi-briefcase-outline"></i> জবসলুশন ভিত্তিক
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="?type=subjectWise" class="nav-link {{ $type == 'subjectWise' ? 'active' : '' }}">
-                        <i class="mdi mdi-book-open-page-variant"></i> বিষয় ভিত্তিক
-                    </a>
-                </li>
-
-            </ul> --}}
-
             <div id="tabContentArea">
-                @include(
-                    'teacher.pages.partials.question_builder_question_list',
-                    array_merge(['type' => $type], $tabData))
+                @include('teacher.pages.partials.question_builder_question_list', $tabData)
             </div>
         </div>
     </div>
@@ -98,7 +74,7 @@
             <h2 class="card-title mb-0">প্রশ্ন সমূহ</h2>
         </div>
         <div class="card-body">
-            @if ($questions)
+            @if ($questions && $questions->count() > 0)
                 @foreach ($questions as $question)
                     <div class="mb-3 p-2 border rounded">
                         <div class="d-flex align-items-start">
@@ -205,17 +181,15 @@
                 });
             }
 
-            // For job_solution type, load chapters based on subject selection
-            if ('{{ $type }}' === 'job_solution') {
-                $('#subjectSelect').on('change', function() {
-                    let subjectIds = $(this).val();
-                    loadChapters(subjectIds);
-                });
+            // Load chapters based on subject selection
+            $('#subjectSelect').on('change', function() {
+                let subjectIds = $(this).val();
+                loadChapters(subjectIds);
+            });
 
-                // Load chapters if subjects are already selected
-                if ($('#subjectSelect').val() && $('#subjectSelect').val().length > 0) {
-                    loadChapters($('#subjectSelect').val());
-                }
+            // Load chapters if subjects are already selected
+            if ($('#subjectSelect').val() && $('#subjectSelect').val().length > 0) {
+                loadChapters($('#subjectSelect').val());
             }
 
             function loadChapters(subjectIds) {
@@ -253,7 +227,19 @@
                             updateTreeSelectText(data.selected);
                         });
 
-                        updateTreeSelectText([]);
+                        $('#chapterTree').on('loaded.jstree', function() {
+                            // Pre-select chapters if any
+                            let preSelected = $('#selectedChapters').val();
+                            if (preSelected) {
+                                let ids = preSelected.split(',').filter(id => id);
+                                $('#chapterTree').jstree('select_node', ids);
+                                updateTreeSelectText(ids);
+                            } else {
+                                updateTreeSelectText([]);
+                            }
+                        });
+
+                        // Do not show dropdown here, only on toggle click
                     },
                     error: function(xhr, status, error) {
                         console.error('Error loading chapters:', error);
@@ -273,6 +259,9 @@
             // Toggle dropdown
             $('#treeSelectToggle').on('click', function() {
                 $('#treeSelectDropdown').toggle();
+                if ($('#treeSelectDropdown').is(':visible')) {
+                    $('#chapterTree').jstree('open_all');
+                }
             });
 
             // Hide dropdown when clicking outside
