@@ -15,7 +15,7 @@
 
         .tree-select-input {
             border: 1px solid #ced4da;
-            padding: 10px;
+            padding: 8px;
             border-radius: 6px;
             cursor: pointer;
             display: flex;
@@ -64,7 +64,7 @@
             <h2 class="card-title mb-0">প্রশ্ন বিল্ডার</h2>
         </div>
         <div class="card-body">
-            <ul class="nav nav-pills mb-3">
+            {{-- <ul class="nav nav-pills mb-3">
 
                 <li class="nav-item">
                     <a href="?type=year" class="nav-link {{ $type == 'year' ? 'active' : '' }}">
@@ -84,7 +84,7 @@
                     </a>
                 </li>
 
-            </ul>
+            </ul> --}}
 
             <div id="tabContentArea">
                 @include(
@@ -146,12 +146,146 @@
 @endsection
 
 @section('teacher_custom_js')
+    @php
+        $selectedCategoryIds = request()->category_id ?? [];
+        $selectedExamIds = request()->exam_id ?? [];
+        $selectedSubjectIds = request()->subject_id ?? [];
+    @endphp
+
+    <!-- JSTree JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.min.js"></script>
+
     <script>
         $(document).ready(function() {
-            // Select2 init
             $('.select2').select2({
                 placeholder: "নির্বাচন করুন",
                 width: '100%'
+            });
+
+            // Selected exam IDs from request
+            let selectedExamIds = @json($selectedExamIds);
+
+            // Trigger AJAX if categories already selected
+            if ($('#categorySelect').val() && $('#categorySelect').val().length > 0) {
+                loadExams($('#categorySelect').val());
+            }
+
+            $('#categorySelect').on('change', function() {
+                let categoryIds = $(this).val();
+                loadExams(categoryIds);
+            });
+
+            function loadExams(categoryIds) {
+                if (!categoryIds || categoryIds.length === 0) {
+                    $('#examSelect').empty().append(`<option value="">-- আগে ক্যাটাগরি নির্বাচন করুন --</option>`)
+                        .trigger('change');
+                    return;
+                }
+
+                $.ajax({
+                    url: "{{ route('loadPreviousExams') }}",
+                    type: "GET",
+                    data: {
+                        category_ids: categoryIds
+                    },
+                    success: function(response) {
+                        let examSelect = $('#examSelect');
+                        examSelect.empty().append(
+                            `<option value="">-- পরীক্ষা নির্বাচন করুন --</option>`);
+
+                        response.forEach(function(exam) {
+                            let selected = selectedExamIds.includes(exam.id) ? 'selected' : '';
+                            examSelect.append(
+                                `<option value="${exam.id}" ${selected}>${exam.name}</option>`
+                            );
+                        });
+
+                        examSelect.val(selectedExamIds).trigger('change');
+                    }
+                });
+            }
+
+            // For job_solution type, load chapters based on subject selection
+            if ('{{ $type }}' === 'job_solution') {
+                $('#subjectSelect').on('change', function() {
+                    let subjectIds = $(this).val();
+                    loadChapters(subjectIds);
+                });
+
+                // Load chapters if subjects are already selected
+                if ($('#subjectSelect').val() && $('#subjectSelect').val().length > 0) {
+                    loadChapters($('#subjectSelect').val());
+                }
+            }
+
+            function loadChapters(subjectIds) {
+                if (!subjectIds || subjectIds.length === 0) {
+                    $('#chapterTree').jstree('destroy').empty();
+                    $('#treeSelectText').text('Select Chapters');
+                    return;
+                }
+
+                $.ajax({
+                    url: "{{ route('loadChapters') }}",
+                    type: "GET",
+                    data: {
+                        subject_ids: subjectIds
+                    },
+                    success: function(data) {
+                        console.log('Loaded chapters:', data);
+                        $('#chapterTree').jstree('destroy').empty();
+                        $('#chapterTree').jstree({
+                            'core': {
+                                'data': data,
+                                'themes': {
+                                    'icons': false
+                                }
+                            },
+                            'plugins': ['checkbox', 'search'],
+                            'checkbox': {
+                                'keep_selected_style': false
+                            }
+                        });
+
+                        $('#chapterTree').on('changed.jstree', function (e, data) {
+                            let selectedIds = data.selected;
+                            $('#selectedChapters').val(selectedIds.join(','));
+                            updateTreeSelectText(data.selected);
+                        });
+
+                        updateTreeSelectText([]);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error loading chapters:', error);
+                        alert('Error loading chapters: ' + error);
+                    }
+                });
+            }
+
+            function updateTreeSelectText(selected) {
+                if (selected.length === 0) {
+                    $('#treeSelectText').text('Select Chapters');
+                } else {
+                    $('#treeSelectText').text(selected.length + ' Chapters Selected');
+                }
+            }
+
+            // Toggle dropdown
+            $('#treeSelectToggle').on('click', function() {
+                $('#treeSelectDropdown').toggle();
+            });
+
+            // Hide dropdown when clicking outside
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.tree-select-wrapper').length) {
+                    $('#treeSelectDropdown').hide();
+                }
+            });
+
+            // Search functionality
+            $('#treeSearch').on('keyup', function() {
+                let searchString = $(this).val();
+                $('#chapterTree').jstree('search', searchString);
             });
         });
     </script>

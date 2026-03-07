@@ -134,4 +134,16 @@ class PreviousExamService
         $questions = Question::whereIn('id', $exam->questions->pluck('id'))->with('options')->paginate(20);
         return view('teacher.pages.view_previous_exam_questions', compact('exam', 'questions'));
     }
+    public function renderLoadPreviousExams($request)
+    {
+        $categoryId = $request->input('category_ids');
+        // dd($categoryId);
+        $exams = PreviousExam::when($categoryId, function ($query) use ($categoryId) {
+            $query->whereIn('previous_exam_category_id', $categoryId);
+        })->with('year')->latest()->get();
+
+        // dd($exams);
+
+        return response()->json($exams);
+    }
 }

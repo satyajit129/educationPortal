@@ -48,4 +48,8 @@ class TeacherPreviousExamCategoryController extends Controller
     {
         return $this->previousExamService->renderViewPreviousExamQuestions($examId);
     }
+    public function loadPreviousExams(Request $request)
+    {
+        return $this->previousExamService->renderLoadPreviousExams($request);
+    }
 }

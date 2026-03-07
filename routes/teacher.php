@@ -33,6 +33,7 @@ Route::prefix('t')->group(function () {
         Route::get('/add-question-form/{categoryId}/{examId}', [TeacherPreviousExamCategoryController::class, 'previousExamAddQuestionForm'])->name('previousExamAddQuestionForm');
         Route::post('/save-exam-questions/{examId}', [TeacherPreviousExamCategoryController::class, 'savePreviousExamQuestions'])->name('savePreviousExamQuestions');
         Route::get('/view-questions/{examId}', [TeacherPreviousExamCategoryController::class, 'viewPreviousExamQuestions'])->name('viewPreviousExamQuestions');
+        Route::get('/exam-list-ajax', [TeacherPreviousExamCategoryController::class, 'loadPreviousExams'])->name('loadPreviousExams');
     });
 
     Route::prefix('year')->group(function () {
@@ -55,17 +56,12 @@ Route::prefix('t')->group(function () {
     });
 
     Route::prefix('question-builder')->group(function () {
-       Route::any('/select', [TeacherQuestionBuilderController::class, 'selectExamQuestion'])->name('selectExamQuestion');
-        Route::any( '/load-questions', [TeacherQuestionBuilderController::class, 'loadQuestions'])->name('loadQuestions');
-        
-        
-        
-        
+        Route::any('/select', [TeacherQuestionBuilderController::class, 'selectExamQuestion'])->name('selectExamQuestion');
         Route::get('/load-chapters',[TeacherQuestionBuilderController::class, 'loadChapters'])->name('loadChapters');
+
+        
         Route::post('/toggle-question', [TeacherQuestionBuilderController::class, 'toggleQuestion'])->name('toggleQuestion');
         Route::post('/create-exam', [TeacherQuestionBuilderController::class, 'createExam'])->name('createExam');
-
-        Route::get('/question-type', [TeacherQuestionBuilderController::class, 'builderQuestionType'])->name('builderQuestionType');
         
     });
 });

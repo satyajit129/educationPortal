@@ -8,7 +8,7 @@ class QuestionCategory extends Model
 {
     protected $guarded = [];
 
-        /* Parent category */
+    /* Parent category */
     public function parent()
     {
         return $this->belongsTo(self::class, 'parent_category_id');
