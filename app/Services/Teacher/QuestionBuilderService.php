@@ -102,4 +102,36 @@ class QuestionBuilderService
 
         return view('teacher.pages.question_builder_select', compact('tabData', 'questions'));
     }
+
+    public function handleLoadChapters($request)
+    {
+        $subjectIds = $request->input('subject_ids', []);
+
+        if (empty($subjectIds)) {
+            return response()->json([]);
+        }
+
+        $subjects = QuestionCategory::whereIn('id', $subjectIds)
+            ->with('childrenRecursive')
+            ->get();
+
+        $tree = [];
+        foreach ($subjects as $subject) {
+            $tree = array_merge($tree, $this->buildTreeFromCategory($subject->childrenRecursive));
+        }
+
+        return response()->json($tree);
+    }
+    private function buildTreeFromCategory($categories)
+    {
+        $tree = [];
+        foreach ($categories as $category) {
+            $tree[] = [
+                'id' => $category->id,
+                'text' => $category->name,
+                'children' => $this->buildTreeFromCategory($category->childrenRecursive)
+            ];
+        }
+        return $tree;
+    }
 }

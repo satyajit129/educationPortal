@@ -5,7 +5,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" />
 
     <!-- Select2 CSS -->
-    {{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css" rel="stylesheet" /> --}}
+    {{--
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css" rel="stylesheet" /> --}}
 
     <style>
         .tree-select-wrapper {
@@ -56,6 +57,26 @@
             cursor: pointer;
         }
     </style>
+
+    <style>
+        #floatingSubmitWrapper {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9999;
+        }
+
+        #submitSelectedQuestions {
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-size: 16px;
+        }
+
+        .selected-question-item {
+            border-bottom: 1px solid #eee;
+            padding: 6px 0;
+        }
+    </style>
 @endsection
 
 @section('teacher_content')
@@ -69,55 +90,138 @@
             </div>
         </div>
     </div>
-    <div class="card card-default">
-        <div class="card-header">
-            <h2 class="card-title mb-0">প্রশ্ন সমূহ</h2>
-        </div>
-        <div class="card-body">
-            @if ($questions && $questions->count() > 0)
-                @foreach ($questions as $question)
-                    <div class="mb-3 p-2 border rounded">
-                        <div class="d-flex align-items-start">
+    <div class="row">
 
-                            <!-- ✅ Question Checkbox -->
-                            <div class="form-check me-2">
-                                <input class="form-check-input select-question-checkbox" type="checkbox"
-                                    id="q{{ $question->id }}" value="{{ $question->id }}">
-                            </div>
+        {{-- LEFT SIDE : QUESTION LIST --}}
+        <div class="col-md-7">
 
-                            <!-- Question Text -->
-                            <h5 class="mb-0 d-flex align-items-center">
-                                <span
-                                    class="badge badge-primary badge-pill">Q{{ ($questions->currentPage() - 1) * $questions->perPage() + $loop->iteration }}</span>
-                                {!! $question->question_text !!}
-                            </h5>
-                        </div>
+            <div class="card card-default">
 
-                        <hr>
+                <div class="card-header d-flex justify-content-between align-items-center">
 
-                        <!-- Options -->
-                        <div class="row mt-2">
-                            @foreach ($question->options as $option)
-                                <div class="col-lg-6 col-md-12">
-                                    <label class="d-flex align-items-center " style="gap: 5px;">
-                                        <input type="radio" name="q{{ $question->id }}" value="{{ $option->id }}">
-                                        {!! $option->option_text !!}
-                                    </label>
-                                </div>
-                            @endforeach
-                        </div>
+                    <h4 class="mb-0">প্রশ্ন সমূহ</h4>
+
+                    <div>
+                        <button class="btn btn-sm btn-primary" id="selectAllBtn">
+                            Select All
+                        </button>
+
+                        <button class="btn btn-sm btn-secondary" id="deselectAllBtn">
+                            Deselect All
+                        </button>
                     </div>
-                @endforeach
 
-                <div class="mt-3">
-                    {{ $questions->links() }}
                 </div>
-            @else
-                <div class="alert alert-warning">
-                    কোনো প্রশ্ন পাওয়া যায়নি
+
+                <div class="card-body">
+
+                    @if ($questions && $questions->count() > 0)
+                        @foreach ($questions as $question)
+                            <div class="mb-3 p-2 border rounded">
+
+                                <div class="d-flex align-items-start">
+
+                                    <div class="form-check me-2">
+                                        <input type="checkbox" class="form-check-input select-question-checkbox"
+                                            value="{{ $question->id }}" id="q{{ $question->id }}">
+                                    </div>
+
+                                    <h5 class="mb-0">
+
+                                        <span class="badge badge-primary">
+
+                                            Q{{ ($questions->currentPage() - 1) * $questions->perPage() + $loop->iteration }}
+
+                                        </span>
+
+                                        {!! $question->question_text !!}
+
+                                    </h5>
+
+                                </div>
+
+                                <hr>
+
+                                <div class="row">
+
+                                    @foreach ($question->options as $option)
+                                        <div class="col-md-6">
+
+                                            <label class="d-flex">
+
+                                                <input type="radio" name="q{{ $question->id }}">
+
+                                                <span class="ms-2">
+                                                    {!! $option->option_text !!}
+                                                </span>
+
+                                            </label>
+
+                                        </div>
+                                    @endforeach
+
+                                </div>
+
+                            </div>
+                        @endforeach
+
+
+                        <div class="mt-3">
+                            {{ $questions->links() }}
+                        </div>
+                    @else
+                        <div class="alert alert-warning">
+                            কোনো প্রশ্ন পাওয়া যায়নি
+                        </div>
+                    @endif
+
                 </div>
-            @endif
+
+            </div>
+
         </div>
+
+
+
+        {{-- RIGHT SIDE : SELECTED QUESTIONS PANEL --}}
+        <div class="col-md-5">
+
+            <div class="card card-default">
+
+                <div class="card-header">
+                    <strong>Selected Questions</strong>
+                </div>
+
+                <div class="card-body" id="selectedQuestionsList">
+
+                    <p class="text-muted">
+                        No questions selected
+                    </p>
+
+                </div>
+
+                <div class="card-footer">
+
+                    Total:
+                    <span id="selectedCountSide">0</span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    {{-- FLOATING SUBMIT BUTTON --}}
+    <div id="floatingSubmitWrapper">
+
+        <button class="btn btn-success" id="submitSelectedQuestions">
+
+            Submit
+            (<span id="selectedCount">0</span>)
+
+        </button>
+
     </div>
 @endsection
 
@@ -221,7 +325,7 @@
                             }
                         });
 
-                        $('#chapterTree').on('changed.jstree', function (e, data) {
+                        $('#chapterTree').on('changed.jstree', function(e, data) {
                             let selectedIds = data.selected;
                             $('#selectedChapters').val(selectedIds.join(','));
                             updateTreeSelectText(data.selected);
@@ -276,6 +380,223 @@
                 let searchString = $(this).val();
                 $('#chapterTree').jstree('search', searchString);
             });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+
+            let selectedQuestions =
+                JSON.parse(localStorage.getItem('selectedQuestions')) || [];
+
+
+            function saveToLocal() {
+
+                localStorage.setItem(
+                    'selectedQuestions',
+                    JSON.stringify(selectedQuestions)
+                );
+
+            }
+
+
+
+            function updateSelectedCount() {
+
+                $('#selectedCount').text(selectedQuestions.length);
+                $('#selectedCountSide').text(selectedQuestions.length);
+
+            }
+
+
+
+            function renderSelectedQuestions() {
+
+                let container = $('#selectedQuestionsList');
+
+                container.empty();
+
+                if (selectedQuestions.length === 0) {
+
+                    container.html(
+                        '<p class="text-muted">No questions selected</p>'
+                    );
+
+                    return;
+                }
+
+
+                selectedQuestions.forEach(function(id, index) {
+
+                    container.append(
+
+                        `<div class="selected-question-item d-flex justify-content-between">
+
+                    <span>
+                        ${index+1}. Question : ${id}
+                    </span>
+
+                    <button
+                        class="btn btn-sm btn-danger removeSelected"
+                        data-id="${id}"
+                    >
+                        Remove
+                    </button>
+
+                </div>`
+
+                    );
+
+                });
+
+            }
+
+
+
+            // Restore checkbox state
+            $('.select-question-checkbox').each(function() {
+
+                let id = $(this).val().toString();
+
+                if (selectedQuestions.includes(id)) {
+
+                    $(this).prop('checked', true);
+
+                }
+
+            });
+
+
+
+            updateSelectedCount();
+            renderSelectedQuestions();
+
+
+
+            // Checkbox change
+            $(document).on('change', '.select-question-checkbox', function() {
+
+                let id = $(this).val().toString();
+
+                if ($(this).is(':checked')) {
+
+                    if (!selectedQuestions.includes(id)) {
+
+                        selectedQuestions.push(id);
+
+                    }
+
+                } else {
+
+                    selectedQuestions =
+                        selectedQuestions.filter(q => q !== id);
+
+                }
+
+
+                saveToLocal();
+
+                updateSelectedCount();
+
+                renderSelectedQuestions();
+
+            });
+
+
+
+            // Select all current page
+            $('#selectAllBtn').click(function() {
+
+                $('.select-question-checkbox').each(function() {
+
+                    let id = $(this).val().toString();
+
+                    $(this).prop('checked', true);
+
+                    if (!selectedQuestions.includes(id)) {
+
+                        selectedQuestions.push(id);
+
+                    }
+
+                });
+
+
+                saveToLocal();
+
+                updateSelectedCount();
+
+                renderSelectedQuestions();
+
+            });
+
+
+
+            // Deselect all current page
+            $('#deselectAllBtn').click(function() {
+
+                $('.select-question-checkbox').each(function() {
+
+                    let id = $(this).val().toString();
+
+                    $(this).prop('checked', false);
+
+                    selectedQuestions =
+                        selectedQuestions.filter(q => q !== id);
+
+                });
+
+
+                saveToLocal();
+
+                updateSelectedCount();
+
+                renderSelectedQuestions();
+
+            });
+
+
+
+            // Remove from sidebar
+            $(document).on('click', '.removeSelected', function() {
+
+                let id = $(this).data('id').toString();
+
+                selectedQuestions =
+                    selectedQuestions.filter(q => q !== id);
+
+                saveToLocal();
+
+                $('#q' + id).prop('checked', false);
+
+                updateSelectedCount();
+
+                renderSelectedQuestions();
+
+            });
+
+
+
+            // Submit
+            $('#submitSelectedQuestions').click(function() {
+
+                if (selectedQuestions.length === 0) {
+
+                    alert('No question selected');
+
+                    return;
+
+                }
+
+                alert(
+                    "Selected Question IDs:\n\n" +
+                    selectedQuestions.join(',')
+                );
+
+                console.log(selectedQuestions);
+
+            });
+
         });
     </script>
 @endsection
