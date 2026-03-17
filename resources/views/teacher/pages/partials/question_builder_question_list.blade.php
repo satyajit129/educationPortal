@@ -4,13 +4,13 @@
     $selectedSubjectIds = request()->subject_id ?? [];
 @endphp
 
-<form action="{{ route('selectExamQuestion') }}" method="get">
+<form action="{{ route('selectExamQuestion', $exam->id) }}" method="get">
     <!-- Category -->
     <div class="form-group">
         <label>পূর্ববর্তী পরীক্ষা ক্যাটাগরি নির্বাচন করুন:</label>
         <select class="form-control select2" id="categorySelect" name="category_id[]" multiple>
             <option value="">-- ক্যাটাগরি নির্বাচন করুন --</option>
-            @foreach ($categories as $cat)
+            @foreach ($tabData['categories'] as $cat)
                 <option value="{{ $cat->id }}"
                     {{ in_array($cat->id, $selectedCategoryIds) ? 'selected' : '' }}>
                     {{ $cat->name }}
@@ -32,7 +32,7 @@
         <label for="subjectSelect">বিষয় নির্বাচন করুন:</label>
         <select class="form-control select2" id="subjectSelect" name="subject_id[]" multiple>
             <option value="">-- বিষয় নির্বাচন করুন --</option>
-            @foreach ($subjects as $subject)
+            @foreach ($tabData['subjects'] as $subject)
                 <option value="{{ $subject->id }}"
                     {{ in_array($subject->id, $selectedSubjectIds) ? 'selected' : '' }}>
                     {{ $subject->name }}
@@ -61,7 +61,7 @@
         <label for="yearSelect">বছর নির্বাচন করুন: <span class="text-danger">**</span> </label>
         <select class="form-control select2" id="yearSelect" name="year_id[]" multiple>
             <option value="">-- বছর নির্বাচন করুন --</option>
-            @foreach ($years as $year)
+            @foreach ($tabData['years'] as $year)
                 <option value="{{ $year->id }}"
                     {{ in_array($year->id, request()->year_id ?? []) ? 'selected' : '' }}>
                     {{ $year->title }}
@@ -71,7 +71,7 @@
     </div>
     <div>
         <button type="submit" class="btn btn-primary">প্রশ্ন লোড করুন</button>
-        <a href="{{ route('selectExamQuestion') }}" class="btn btn-secondary">রিসেট করুন</a>
+        <a href="{{ route('selectExamQuestion', $exam->id) }}" class="btn btn-secondary">রিসেট করুন</a>
     </div>
     
 </form>

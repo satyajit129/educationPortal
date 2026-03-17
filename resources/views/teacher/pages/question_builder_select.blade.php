@@ -83,17 +83,18 @@
     <div class="card card-default">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h2 class="card-title mb-0">প্রশ্ন বিল্ডার</h2>
+            <a class="btn btn-sm btn-primary" href="{{ route('questionBuilderIndex') }}">তালিকা দেখুন </a>
         </div>
         <div class="card-body">
             <div id="tabContentArea">
-                @include('teacher.pages.partials.question_builder_question_list', $tabData)
+                @include('teacher.pages.partials.question_builder_question_list',compact('tabData', 'exam'))
             </div>
         </div>
     </div>
     <div class="row">
 
         {{-- LEFT SIDE : QUESTION LIST --}}
-        <div class="col-md-7">
+        <div class="col-lg-12">
 
             <div class="card card-default">
 
@@ -114,114 +115,83 @@
                 </div>
 
                 <div class="card-body">
+                    <form action="{{ route('questionBuilderQuestionSave', $exam->id) }}" method="POST">
+                        @csrf
+                        {{-- Hidden inputs for filters --}}
+                        @foreach(request()->category_id ?? [] as $id)
+                            <input type="hidden" name="category_id[]" value="{{ $id }}">
+                        @endforeach
+                        @foreach(request()->exam_id ?? [] as $id)
+                            <input type="hidden" name="exam_id[]" value="{{ $id }}">
+                        @endforeach
+                        @foreach(request()->subject_id ?? [] as $id)
+                            <input type="hidden" name="subject_id[]" value="{{ $id }}">
+                        @endforeach
+                        @foreach(request()->year_id ?? [] as $id)
+                            <input type="hidden" name="year_id[]" value="{{ $id }}">
+                        @endforeach
+                        <input type="hidden" name="child_chapter_ids" value="{{ request()->child_chapter_ids ?? '' }}">
+                        <input type="hidden" name="page" value="{{ $questions ? $questions->currentPage() : 1 }}">
+                        @if ($questions && $questions->count() > 0)
+                            @foreach ($questions as $question)
+                                <div class="mb-3 p-2 border rounded">
+                                    <div class="d-flex align-items-start">
 
-                    @if ($questions && $questions->count() > 0)
-                        @foreach ($questions as $question)
-                            <div class="mb-3 p-2 border rounded">
+                                        <!-- ✅ Question Checkbox -->
+                                        <div class=" mr-2">
+                                            <input type="checkbox" name="questions[]" value="{{ $question->id }}" {{ in_array($question->id,
+            $selectedQuestions) ? 'checked' : '' }}>
+                                        </div>
 
-                                <div class="d-flex align-items-start">
-
-                                    <div class="form-check me-2">
-                                        <input type="checkbox" class="form-check-input select-question-checkbox"
-                                            value="{{ $question->id }}" id="q{{ $question->id }}">
+                                        <!-- Question Text -->
+                                        <h5 class="mb-0 d-flex align-items-center">
+                                            <span
+                                                class="badge badge-primary badge-pill">Q{{ ($questions->currentPage() - 1) * $questions->perPage() + $loop->iteration }}</span>
+                                            {!! $question->question_text !!}
+                                        </h5>
                                     </div>
 
-                                    <h5 class="mb-0">
+                                    <hr>
 
-                                        <span class="badge badge-primary">
-
-                                            Q{{ ($questions->currentPage() - 1) * $questions->perPage() + $loop->iteration }}
-
-                                        </span>
-
-                                        {!! $question->question_text !!}
-
-                                    </h5>
-
+                                    <!-- Options -->
+                                    <div class="row mt-2">
+                                        @foreach ($question->options as $option)
+                                            <div class="col-lg-6 col-md-12">
+                                                <label class="d-flex align-items-center" style="gap: 10px;">
+                                                    <input type="radio" name="q{{ $question->id }}"
+                                                        value="{{ $option->id }}" disabled
+                                                        {{ $option->is_correct == 1 ? 'checked' : '' }}>
+                                                    <span
+                                                        style="
+                                                    font-weight: bold; 
+                                                    color: {{ $option->is_correct == 1 ? 'green' : '#333' }};
+                                                    font-size: 16px;
+                                                ">
+                                                        {!! $option->option_text !!}
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </div>
-
-                                <hr>
-
-                                <div class="row">
-
-                                    @foreach ($question->options as $option)
-                                        <div class="col-md-6">
-
-                                            <label class="d-flex">
-
-                                                <input type="radio" name="q{{ $question->id }}">
-
-                                                <span class="ms-2">
-                                                    {!! $option->option_text !!}
-                                                </span>
-
-                                            </label>
-
-                                        </div>
-                                    @endforeach
-
+                            @endforeach
+                            <button class="btn btn-primary mb-2">Submit</button>
+                            <div>
+                                <div>
+                                    {{ $questions->links() }}
                                 </div>
-
+                                
                             </div>
-                        @endforeach
-
-
-                        <div class="mt-3">
-                            {{ $questions->links() }}
-                        </div>
-                    @else
-                        <div class="alert alert-warning">
-                            কোনো প্রশ্ন পাওয়া যায়নি
-                        </div>
-                    @endif
-
+                        @else
+                            <div class="alert alert-warning">
+                                কোনো প্রশ্ন পাওয়া যায়নি
+                            </div>
+                        @endif
+                    </form>
                 </div>
 
             </div>
-
         </div>
-
-
-
-        {{-- RIGHT SIDE : SELECTED QUESTIONS PANEL --}}
-        <div class="col-md-5">
-
-            <div class="card card-default">
-
-                <div class="card-header">
-                    <strong>Selected Questions</strong>
-                </div>
-
-                <div class="card-body" id="selectedQuestionsList">
-
-                    <p class="text-muted">
-                        No questions selected
-                    </p>
-
-                </div>
-
-                <div class="card-footer">
-
-                    Total:
-                    <span id="selectedCountSide">0</span>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-    {{-- FLOATING SUBMIT BUTTON --}}
-    <div id="floatingSubmitWrapper">
-
-        <button class="btn btn-success" id="submitSelectedQuestions">
-
-            Submit
-            (<span id="selectedCount">0</span>)
-
-        </button>
-
     </div>
 @endsection
 
@@ -374,229 +344,6 @@
                     $('#treeSelectDropdown').hide();
                 }
             });
-
-            // Search functionality
-            $('#treeSearch').on('keyup', function() {
-                let searchString = $(this).val();
-                $('#chapterTree').jstree('search', searchString);
-            });
-        });
-    </script>
-
-    <script>
-        $(document).ready(function() {
-
-            let selectedQuestions =
-                JSON.parse(localStorage.getItem('selectedQuestions')) || [];
-
-
-            function saveToLocal() {
-
-                localStorage.setItem(
-                    'selectedQuestions',
-                    JSON.stringify(selectedQuestions)
-                );
-
-            }
-
-
-
-            function updateSelectedCount() {
-
-                $('#selectedCount').text(selectedQuestions.length);
-                $('#selectedCountSide').text(selectedQuestions.length);
-
-            }
-
-
-
-            function renderSelectedQuestions() {
-
-                let container = $('#selectedQuestionsList');
-
-                container.empty();
-
-                if (selectedQuestions.length === 0) {
-
-                    container.html(
-                        '<p class="text-muted">No questions selected</p>'
-                    );
-
-                    return;
-                }
-
-
-                selectedQuestions.forEach(function(id, index) {
-
-                    container.append(
-
-                        `<div class="selected-question-item d-flex justify-content-between">
-
-                    <span>
-                        ${index+1}. Question : ${id}
-                    </span>
-
-                    <button
-                        class="btn btn-sm btn-danger removeSelected"
-                        data-id="${id}"
-                    >
-                        Remove
-                    </button>
-
-                </div>`
-
-                    );
-
-                });
-
-            }
-
-
-
-            // Restore checkbox state
-            $('.select-question-checkbox').each(function() {
-
-                let id = $(this).val().toString();
-
-                if (selectedQuestions.includes(id)) {
-
-                    $(this).prop('checked', true);
-
-                }
-
-            });
-
-
-
-            updateSelectedCount();
-            renderSelectedQuestions();
-
-
-
-            // Checkbox change
-            $(document).on('change', '.select-question-checkbox', function() {
-
-                let id = $(this).val().toString();
-
-                if ($(this).is(':checked')) {
-
-                    if (!selectedQuestions.includes(id)) {
-
-                        selectedQuestions.push(id);
-
-                    }
-
-                } else {
-
-                    selectedQuestions =
-                        selectedQuestions.filter(q => q !== id);
-
-                }
-
-
-                saveToLocal();
-
-                updateSelectedCount();
-
-                renderSelectedQuestions();
-
-            });
-
-
-
-            // Select all current page
-            $('#selectAllBtn').click(function() {
-
-                $('.select-question-checkbox').each(function() {
-
-                    let id = $(this).val().toString();
-
-                    $(this).prop('checked', true);
-
-                    if (!selectedQuestions.includes(id)) {
-
-                        selectedQuestions.push(id);
-
-                    }
-
-                });
-
-
-                saveToLocal();
-
-                updateSelectedCount();
-
-                renderSelectedQuestions();
-
-            });
-
-
-
-            // Deselect all current page
-            $('#deselectAllBtn').click(function() {
-
-                $('.select-question-checkbox').each(function() {
-
-                    let id = $(this).val().toString();
-
-                    $(this).prop('checked', false);
-
-                    selectedQuestions =
-                        selectedQuestions.filter(q => q !== id);
-
-                });
-
-
-                saveToLocal();
-
-                updateSelectedCount();
-
-                renderSelectedQuestions();
-
-            });
-
-
-
-            // Remove from sidebar
-            $(document).on('click', '.removeSelected', function() {
-
-                let id = $(this).data('id').toString();
-
-                selectedQuestions =
-                    selectedQuestions.filter(q => q !== id);
-
-                saveToLocal();
-
-                $('#q' + id).prop('checked', false);
-
-                updateSelectedCount();
-
-                renderSelectedQuestions();
-
-            });
-
-
-
-            // Submit
-            $('#submitSelectedQuestions').click(function() {
-
-                if (selectedQuestions.length === 0) {
-
-                    alert('No question selected');
-
-                    return;
-
-                }
-
-                alert(
-                    "Selected Question IDs:\n\n" +
-                    selectedQuestions.join(',')
-                );
-
-                console.log(selectedQuestions);
-
-            });
-
         });
     </script>
 @endsection

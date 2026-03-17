@@ -14,13 +14,30 @@ class TeacherQuestionBuilderController extends Controller
     {
         $this->questionBuilderService = $questionBuilderService;
     }
-    public function selectExamQuestion(Request $request)
+    public function questionBuilderIndex()
     {
-        return $this->questionBuilderService->renderSelectExamQuestion($request);
+        return $this->questionBuilderService->renderQuestionBuilderIndex();
+    }
+    public function questionBuilderExamForm($id = null)
+    {
+        return $this->questionBuilderService->renderQuestionBuilderExamForm($id);
+    }
+    public function questionBuilderExamSave(Request $request, $id = null)
+    {
+        return $this->questionBuilderService->handleQuestionBuilderExamSave($request, $id);
+    }
+    public function selectExamQuestion(Request $request, $id)
+    {
+        return $this->questionBuilderService->renderSelectExamQuestion($request, $id);
     }
 
     public function loadChapters(Request $request)
     {
         return $this->questionBuilderService->handleLoadChapters($request);
+    }
+
+    public function questionBuilderQuestionSave(Request $request , $id)
+    {
+        return $this->questionBuilderService->handleQuestionBuilderQuestionSave($request , $id);
     }
 }

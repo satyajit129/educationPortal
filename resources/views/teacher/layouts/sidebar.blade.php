@@ -63,9 +63,13 @@
                     </a>
                 </li>
 
+                @php
+                    $questionbuilderroute = ['questionBuilderIndex', 'questionBuilderExamForm','selectExamQuestion']
+                @endphp
+
                 {{-- Question Builder --}}
-                <li class="{{ Route::is('selectExamQuestion') ? 'active' : '' }}">
-                    <a href="{{ route('selectExamQuestion') }}" class="sidenav-item-link">
+                <li class="{{ Route::is($questionbuilderroute) ? 'active' : '' }}">
+                    <a href="{{ route('questionBuilderIndex') }}" class="sidenav-item-link">
                         <i class="mdi mdi-tools"></i>
                         <span class="nav-text">প্রশ্ন বিল্ডার</span>
                     </a>

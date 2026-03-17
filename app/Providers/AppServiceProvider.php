@@ -23,6 +23,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Route::middleware('web')
             ->group(base_path('routes/teacher.php'));
-            Paginator::useBootstrap();
+            Paginator::useBootstrapFive();
     }
 }

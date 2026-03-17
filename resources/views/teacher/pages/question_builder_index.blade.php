@@ -1,0 +1,75 @@
+@extends('teacher.global.master')
+
+
+@section('teacher_custom_style')
+    <style>
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            vertical-align: middle;
+            border-top: 1px solid #e5e9f2;
+        }
+    </style>
+@endsection
+@section('teacher_content')
+    <div class="card card-default">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="card-title mb-0">পরীক্ষার তালিকা </h2>
+            <a href="{{ route('questionBuilderExamForm') }}" class="btn btn-primary btn-sm">নতুন পরীক্ষা যোগ করুন</a>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                @forelse ($exams as $exam)
+                    <div class="col-lg-6">
+                        <div class="card card-default">
+                            <div class="card-header d-flex justify-content-between">
+                                <div>
+                                    <h2>{{ $exam->title }}</h2>
+
+                                    
+                                </div>
+                                <div>
+                                    <!-- Edit Button -->
+                                    <a href="{{ route('questionBuilderExamForm', $exam->id) }}"
+                                        class="btn btn-sm btn-primary">
+                                        Edit
+                                    </a>
+
+
+                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                @php
+                                    $totalQuestions = $exam->number_of_question_want_to_add ?? 0;
+                                    $addedQuestions = $exam->questions->count() ?? 0;
+                                    $remainingQuestions = $totalQuestions - $addedQuestions;
+                                    $progress = $totalQuestions > 0 ? ($addedQuestions / $totalQuestions) * 100 : 0;
+                                @endphp
+
+                                <div class="progress progress-sm rounded-0 mb-1">
+                                    <div class="progress-bar bg-secondary" role="progressbar"
+                                        style="width: {{ $progress }}%" aria-valuenow="{{ $addedQuestions }}"
+                                        aria-valuemin="0" aria-valuemax="{{ $totalQuestions }}">
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-dark text-capitalize">Questions Progress</span>
+                                    <span class="text-dark text-capitalize">{{ $addedQuestions }} /
+                                        {{ $totalQuestions }}</span>
+                                </div>
+                                <a href="{{ route('selectExamQuestion', $exam->id) }}" class="btn btn-sm btn-success">
+                                        প্রশ্ন যোগ করুন
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="col-12">
+                        <p class="text-center">কোন পরীক্ষা পাওয়া যায়নি।</p>
+                    </div>
+                @endforelse
+            </div>
+        </div>
+    </div>
+@endsection

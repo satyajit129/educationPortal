@@ -56,12 +56,16 @@ Route::prefix('t')->group(function () {
     });
 
     Route::prefix('question-builder')->group(function () {
-        Route::any('/select', [TeacherQuestionBuilderController::class, 'selectExamQuestion'])->name('selectExamQuestion');
+        Route::get('/',[TeacherQuestionBuilderController::class, 'questionBuilderIndex'])->name('questionBuilderIndex');
+        Route::get('/exam-form/{id?}', [TeacherQuestionBuilderController::class, 'questionBuilderExamForm'])->name('questionBuilderExamForm');
+        Route::post('/exam-save/{id?}', [TeacherQuestionBuilderController::class, 'questionBuilderExamSave'])->name('questionBuilderExamSave');
+        
+        Route::any('/select-questions/{id}', [TeacherQuestionBuilderController::class, 'selectExamQuestion'])->name('selectExamQuestion');
         Route::get('/load-chapters',[TeacherQuestionBuilderController::class, 'loadChapters'])->name('loadChapters');
 
         
         Route::post('/toggle-question', [TeacherQuestionBuilderController::class, 'toggleQuestion'])->name('toggleQuestion');
-        Route::post('/create-exam', [TeacherQuestionBuilderController::class, 'createExam'])->name('createExam');
+        Route::post('/save-questions/{id}', [TeacherQuestionBuilderController::class, 'questionBuilderQuestionSave'])->name('questionBuilderQuestionSave');
         
     });
 });

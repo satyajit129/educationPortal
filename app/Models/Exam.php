@@ -8,20 +8,19 @@ class Exam extends Model
 {
     protected $guarded = [];
 
-        public function questions()
+    public function questions()
     {
         return $this->belongsToMany(Question::class, 'exam_questions')
-            ->withPivot(['mark','negative_mark','question_order'])
-            ->orderBy('exam_questions.question_order');
-    }
-
-    public function settings()
-    {
-        return $this->hasOne(ExamSetting::class);
+            ->withPivot(['mark', 'negative_mark', ])
+            ->orderBy('exam_questions.id', 'asc');
     }
 
     public function answers()
     {
         return $this->hasMany(ExamAnswer::class);
+    }
+    public function negativeMark()
+    {
+        return $this->belongsTo(NegativeMark::class, 'negative_mark_id');
     }
 }
