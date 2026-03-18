@@ -3,6 +3,7 @@
 namespace App\Services\Teacher;
 
 use App\Models\Exam;
+use App\Models\ExamQuestion;
 use App\Models\NegativeMark;
 use App\Models\PreviousExam;
 use App\Models\PreviousExamCategory;
@@ -50,8 +51,10 @@ class QuestionBuilderService
             $exam->number_of_question_want_to_add = $request->totalQuestion;
             $exam->watermark_text = $request->watermark_text;
             $exam->status = $request->status;
-            $exam->created_by = $exam->exists ? $exam->created_by : Auth::id(); // only set created_by if new
-
+            $exam->created_by = $exam->exists ? $exam->created_by : Auth::id();
+            if (!$exam->code) {
+                $exam->code = $exam->generateUniqueCode();
+            }
             $exam->save();
 
             $msg = $id ? 'Exam updated successfully.' : 'Exam created successfully.';
@@ -228,5 +231,21 @@ class QuestionBuilderService
         } catch (\Throwable $th) {
             return redirect()->back()->with('error', $th->getMessage());
         }
+    }
+    public function renderQuestionBuilderQuestionView($id)
+    {
+        $exam = Exam::with(['questions.options'])
+            ->withCount('questions') // 👈 adds questions_count
+            ->findOrFail($id);
+        // paginate questions separately
+        $questions = $exam->questions()->with('options')->paginate(10);
+        return view('teacher.pages.question_builder_questions_view', compact('exam', 'questions'));
+    }
+    public function handleQuestionBuilderQuestionDelete($exam_id, $question_id)
+    {
+        $exam = Exam::findOrFail($exam_id);
+        $exam->questions()->detach($question_id);
+
+        return back()->with('success', 'Question removed!');
     }
 }

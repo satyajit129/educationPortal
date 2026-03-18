@@ -25,8 +25,8 @@
                             <div class="card-header d-flex justify-content-between">
                                 <div>
                                     <h2>{{ $exam->title }}</h2>
+                                    <span>প্রতি ভুল উত্তরের জন্য {{ $exam->negativeMark->marks }} মার্ক কাটা যাবে </span>
 
-                                    
                                 </div>
                                 <div>
                                     <!-- Edit Button -->
@@ -58,9 +58,22 @@
                                     <span class="text-dark text-capitalize">{{ $addedQuestions }} /
                                         {{ $totalQuestions }}</span>
                                 </div>
-                                <a href="{{ route('selectExamQuestion', $exam->id) }}" class="btn btn-sm btn-success">
+                                <div>
+                                    <a href="{{ route('selectExamQuestion', $exam->id) }}" class="btn btn-sm btn-success">
+                                        <i class="mdi mdi-plus-circle-outline"></i>
                                         প্রশ্ন যোগ করুন
                                     </a>
+
+                                    <a class="btn btn-sm btn-info"
+                                        href="{{ route('questionBuilderQuestionView', $exam->id) }}">
+                                        <i class="mdi mdi-eye-outline"></i>
+                                        নির্বাচিত প্রশ্ন দেখুন
+                                    </a>
+                                    <button type="button" class="btn btn-success copy-link-btn" data-link="{{ route('studentExam', $exam->code) }}">
+    Generate & Copy Link
+</button>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -72,4 +85,26 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('teacher_custom_js')
+    <script>
+        $(document).ready(function() {
+            $('.copy-link-btn').on('click', function() {
+                var link = $(this).data('link');
+
+                // Create a temporary input to copy the text
+                var $temp = $('<input>');
+                $('body').append($temp);
+                $temp.val(link).select();
+                try {
+                    document.execCommand('copy');
+                    alert('Link copied to clipboard: ' + link);
+                } catch (err) {
+                    alert('Failed to copy link');
+                }
+                $temp.remove();
+            });
+        });
+    </script>
 @endsection

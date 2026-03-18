@@ -64,7 +64,7 @@
                 </li>
 
                 @php
-                    $questionbuilderroute = ['questionBuilderIndex', 'questionBuilderExamForm','selectExamQuestion']
+                    $questionbuilderroute = ['questionBuilderIndex', 'questionBuilderExamForm','selectExamQuestion','questionBuilderQuestionView']
                 @endphp
 
                 {{-- Question Builder --}}

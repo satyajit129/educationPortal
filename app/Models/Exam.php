@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
+use App\Traits\HasUniqueCode;
 use Illuminate\Database\Eloquent\Model;
 
 class Exam extends Model
 {
+    use HasUniqueCode;
+    
     protected $guarded = [];
 
     public function questions()
     {
         return $this->belongsToMany(Question::class, 'exam_questions')
-            ->withPivot(['mark', 'negative_mark', ])
             ->orderBy('exam_questions.id', 'asc');
     }
 

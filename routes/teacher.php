@@ -62,10 +62,8 @@ Route::prefix('t')->group(function () {
         
         Route::any('/select-questions/{id}', [TeacherQuestionBuilderController::class, 'selectExamQuestion'])->name('selectExamQuestion');
         Route::get('/load-chapters',[TeacherQuestionBuilderController::class, 'loadChapters'])->name('loadChapters');
-
-        
-        Route::post('/toggle-question', [TeacherQuestionBuilderController::class, 'toggleQuestion'])->name('toggleQuestion');
         Route::post('/save-questions/{id}', [TeacherQuestionBuilderController::class, 'questionBuilderQuestionSave'])->name('questionBuilderQuestionSave');
-        
+        Route::get('/view-questions/{id}',[TeacherQuestionBuilderController::class,'questionBuilderQuestionView'])->name('questionBuilderQuestionView');
+        Route::get('/delete-question/{exam_id}/{question_id}',[TeacherQuestionBuilderController::class,'questionBuilderQuestionDelete'])->name('questionBuilderQuestionDelete');
     });
 });

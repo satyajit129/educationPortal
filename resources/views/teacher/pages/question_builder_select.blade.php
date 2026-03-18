@@ -87,7 +87,9 @@
         </div>
         <div class="card-body">
             <div id="tabContentArea">
-                @include('teacher.pages.partials.question_builder_question_list',compact('tabData', 'exam'))
+                @include(
+                    'teacher.pages.partials.question_builder_question_list',
+                    compact('tabData', 'exam'))
             </div>
         </div>
     </div>
@@ -103,12 +105,12 @@
                     <h4 class="mb-0">প্রশ্ন সমূহ</h4>
 
                     <div>
-                        <button class="btn btn-sm btn-primary" id="selectAllBtn">
-                            Select All
+                        <button type="button" class="btn btn-sm btn-primary" id="selectAllBtn">
+                            সব নির্বাচন করুন
                         </button>
 
-                        <button class="btn btn-sm btn-secondary" id="deselectAllBtn">
-                            Deselect All
+                        <button type="button" class="btn btn-sm btn-secondary" id="deselectAllBtn">
+                            সব বাতিল করুন
                         </button>
                     </div>
 
@@ -118,16 +120,16 @@
                     <form action="{{ route('questionBuilderQuestionSave', $exam->id) }}" method="POST">
                         @csrf
                         {{-- Hidden inputs for filters --}}
-                        @foreach(request()->category_id ?? [] as $id)
+                        @foreach (request()->category_id ?? [] as $id)
                             <input type="hidden" name="category_id[]" value="{{ $id }}">
                         @endforeach
-                        @foreach(request()->exam_id ?? [] as $id)
+                        @foreach (request()->exam_id ?? [] as $id)
                             <input type="hidden" name="exam_id[]" value="{{ $id }}">
                         @endforeach
-                        @foreach(request()->subject_id ?? [] as $id)
+                        @foreach (request()->subject_id ?? [] as $id)
                             <input type="hidden" name="subject_id[]" value="{{ $id }}">
                         @endforeach
-                        @foreach(request()->year_id ?? [] as $id)
+                        @foreach (request()->year_id ?? [] as $id)
                             <input type="hidden" name="year_id[]" value="{{ $id }}">
                         @endforeach
                         <input type="hidden" name="child_chapter_ids" value="{{ request()->child_chapter_ids ?? '' }}">
@@ -139,8 +141,8 @@
 
                                         <!-- ✅ Question Checkbox -->
                                         <div class=" mr-2">
-                                            <input type="checkbox" name="questions[]" value="{{ $question->id }}" {{ in_array($question->id,
-            $selectedQuestions) ? 'checked' : '' }}>
+                                            <input type="checkbox" name="questions[]" value="{{ $question->id }}"
+                                                {{ in_array($question->id, $selectedQuestions) ? 'checked' : '' }}>
                                         </div>
 
                                         <!-- Question Text -->
@@ -180,7 +182,7 @@
                                 <div>
                                     {{ $questions->links() }}
                                 </div>
-                                
+
                             </div>
                         @else
                             <div class="alert alert-warning">
@@ -343,6 +345,15 @@
                 if (!$(e.target).closest('.tree-select-wrapper').length) {
                     $('#treeSelectDropdown').hide();
                 }
+            });
+            // ✅ Select All
+            $('#selectAllBtn').on('click', function () {
+                $('input[name="questions[]"]').prop('checked', true);
+            });
+
+            // ✅ Deselect All
+            $('#deselectAllBtn').on('click', function () {
+                $('input[name="questions[]"]').prop('checked', false);
             });
         });
     </script>
