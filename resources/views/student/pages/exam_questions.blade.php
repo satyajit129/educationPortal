@@ -44,38 +44,42 @@
         }
 
         .questions_wrapper {
-    display: flex;
-    gap: 20px; /* space between columns */
-    border-left: 1px solid transparent; /* placeholder to avoid layout shift */
-}
+            display: flex;
+            gap: 20px;
+            /* space between columns */
+            border-left: 1px solid transparent;
+            /* placeholder to avoid layout shift */
+        }
 
-/* Each column takes 50% of available width */
-.questions_column {
-    flex: 1;
-    border-left: 1px solid #ccc; /* separator on the left side of right column */
-    padding-left: 20px;
-}
+        /* Each column takes 50% of available width */
+        .questions_column {
+            flex: 1;
+            border-left: 1px solid #ccc;
+            /* separator on the left side of right column */
+            padding-left: 20px;
+        }
 
-/* Remove separator on the first column */
-.questions_column:first-child {
-    border-left: none;
-    padding-left: 0;
-}
+        /* Remove separator on the first column */
+        .questions_column:first-child {
+            border-left: none;
+            padding-left: 0;
+        }
 
-/* Responsive: single column on small screens */
-@media (max-width: 991px) {
-    .questions_wrapper {
-        flex-direction: column;
-    }
-    .questions_column {
-        border-left: none;
-        padding-left: 0;
-    }
-}
+        /* Responsive: single column on small screens */
+        @media (max-width: 991px) {
+            .questions_wrapper {
+                flex-direction: column;
+            }
 
-.question_item {
-    margin-bottom: 10px;
-}
+            .questions_column {
+                border-left: none;
+                padding-left: 0;
+            }
+        }
+
+        .question_item {
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 
@@ -97,7 +101,11 @@
 
         <form action="" method="POST">
             @csrf
-            <div class="question_body">
+            @php
+    $bengali_letters = ['ক', 'খ', 'গ', 'ঘ', 'ঙ', 'চ', 'ছ', 'জ']; // extend if needed
+@endphp
+
+<div class="question_body">
     @php
         $total = $questions->count();
         $half = ceil($total / 2);
@@ -108,14 +116,15 @@
             @foreach($questions->slice(0, $half) as $question)
                 <div class="question_item">
                     <p><strong>{{ $loop->iteration }}.</strong> {{ $question->question_text }}</p>
-                    @foreach($question->options as $option)
+
+                    @foreach($question->options as $index => $option)
                         <div class="form-check">
                             <input class="form-check-input" type="radio" 
                                    name="answers[{{ $question->id }}]" 
                                    value="{{ $option->id }}" 
                                    id="option{{ $option->id }}">
                             <label class="form-check-label" for="option{{ $option->id }}">
-                                {{ $option->option_text }}
+                                {{ $bengali_letters[$index] ?? chr(65+$index) }}. {{ $option->option_text }}
                             </label>
                         </div>
                     @endforeach
@@ -127,14 +136,15 @@
             @foreach($questions->slice($half) as $question)
                 <div class="question_item">
                     <p><strong>{{ $loop->iteration + $half }}.</strong> {{ $question->question_text }}</p>
-                    @foreach($question->options as $option)
+
+                    @foreach($question->options as $index => $option)
                         <div class="form-check">
                             <input class="form-check-input" type="radio" 
                                    name="answers[{{ $question->id }}]" 
                                    value="{{ $option->id }}" 
                                    id="option{{ $option->id }}">
                             <label class="form-check-label" for="option{{ $option->id }}">
-                                {{ $option->option_text }}
+                                {{ $bengali_letters[$index] ?? chr(65+$index) }}. {{ $option->option_text }}
                             </label>
                         </div>
                     @endforeach
