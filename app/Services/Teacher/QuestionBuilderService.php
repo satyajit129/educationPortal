@@ -9,6 +9,7 @@ use App\Models\PreviousExam;
 use App\Models\PreviousExamCategory;
 use App\Models\Question;
 use App\Models\QuestionCategory;
+use App\Models\UserAttempt;
 use App\Models\Year;
 use Illuminate\Support\Facades\Auth;
 
@@ -235,9 +236,8 @@ class QuestionBuilderService
     public function renderQuestionBuilderQuestionView($id)
     {
         $exam = Exam::with(['questions.options'])
-            ->withCount('questions') // 👈 adds questions_count
+            ->withCount('questions')
             ->findOrFail($id);
-        // paginate questions separately
         $questions = $exam->questions()->with('options')->paginate(10);
         return view('teacher.pages.question_builder_questions_view', compact('exam', 'questions'));
     }
@@ -245,7 +245,12 @@ class QuestionBuilderService
     {
         $exam = Exam::findOrFail($exam_id);
         $exam->questions()->detach($question_id);
-
         return back()->with('success', 'Question removed!');
+    }
+    public function renderQuestionBuilderViewResult($id)
+    {
+        $exam = Exam::findOrFail($id);
+        $userAttemts = UserAttempt::where('exam_id', $exam->id)->orderBy('obtained_marks')->get();
+        return view('teacher.pages.exam_result', compact('exam', 'userAttemts'));
     }
 }

@@ -54,9 +54,8 @@
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-between">
-                                    <span class="text-dark text-capitalize">Questions Progress</span>
-                                    <span class="text-dark text-capitalize">{{ $addedQuestions }} /
-                                        {{ $totalQuestions }}</span>
+                                    <span class="text-dark text-capitalize">প্রশ্নের অগ্রগতি</span>
+                                    <span class="text-dark text-capitalize">{{ $addedQuestions }} / {{ $totalQuestions }}</span>
                                 </div>
                                 <div>
                                     <a href="{{ route('selectExamQuestion', $exam->id) }}" class="btn btn-sm btn-success">
@@ -69,9 +68,15 @@
                                         <i class="mdi mdi-eye-outline"></i>
                                         নির্বাচিত প্রশ্ন দেখুন
                                     </a>
-                                    <button type="button" class="btn btn-success copy-link-btn" data-link="{{ route('studentExam', $exam->code) }}">
-    Generate & Copy Link
-</button>
+                                    <button type="button" 
+                                            class="btn btn-secondary copy-link-btn btn-sm" 
+                                            data-link="{{ route('studentExam', $exam->code) }}">
+                                        <i class="mdi mdi-content-copy"></i> কপি লিঙ্ক
+                                    </button>
+
+                                    <a class="btn btn-sm btn-warning" href="{{ route('questionBuilderViewResult', $exam->id) }}">
+    <i class="mdi mdi-eye-outline me-1"></i> ফলাফল দেখুন
+</a>
                                 </div>
 
                             </div>

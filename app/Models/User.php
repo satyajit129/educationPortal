@@ -33,4 +33,9 @@ class User extends Authenticatable
             'access_role_id'
         );
     }
+
+    public function attempts()
+    {
+        return $this->hasMany(UserAttempt::class);
+    }
 }

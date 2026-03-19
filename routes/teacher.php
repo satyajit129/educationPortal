@@ -65,5 +65,6 @@ Route::prefix('t')->group(function () {
         Route::post('/save-questions/{id}', [TeacherQuestionBuilderController::class, 'questionBuilderQuestionSave'])->name('questionBuilderQuestionSave');
         Route::get('/view-questions/{id}',[TeacherQuestionBuilderController::class,'questionBuilderQuestionView'])->name('questionBuilderQuestionView');
         Route::get('/delete-question/{exam_id}/{question_id}',[TeacherQuestionBuilderController::class,'questionBuilderQuestionDelete'])->name('questionBuilderQuestionDelete');
+        Route::get('/view-result/{id}',[TeacherQuestionBuilderController::class,'questionBuilderViewResult'])->name('questionBuilderViewResult');
     });
 });

@@ -34,7 +34,6 @@ class TeacherQuestionBuilderController extends Controller
     {
         return $this->questionBuilderService->handleLoadChapters($request);
     }
-
     public function questionBuilderQuestionSave(Request $request, $id)
     {
         return $this->questionBuilderService->handleQuestionBuilderQuestionSave($request, $id);
@@ -46,5 +45,9 @@ class TeacherQuestionBuilderController extends Controller
     public function questionBuilderQuestionDelete($exam_id, $question_id)
     {
         return $this->questionBuilderService->handleQuestionBuilderQuestionDelete($exam_id, $question_id);
+    }
+    public function questionBuilderViewResult($id)
+    {
+        return $this->questionBuilderService->renderQuestionBuilderViewResult($id);
     }
 }

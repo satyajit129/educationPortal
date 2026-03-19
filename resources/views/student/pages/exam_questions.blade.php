@@ -8,6 +8,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="{{ asset('source/css/style.css') }}">
     <link href="https://fonts.maateen.me/kalpurush/font.css" rel="stylesheet">
+    <link href="{{ asset('source/plugins/toaster/toastr.min.css') }}" rel="stylesheet" />
 
     <style>
         * {
@@ -46,20 +47,15 @@
         .questions_wrapper {
             display: flex;
             gap: 20px;
-            /* space between columns */
             border-left: 1px solid transparent;
-            /* placeholder to avoid layout shift */
         }
 
-        /* Each column takes 50% of available width */
         .questions_column {
             flex: 1;
             border-left: 1px solid #ccc;
-            /* separator on the left side of right column */
             padding-left: 20px;
         }
 
-        /* Remove separator on the first column */
         .questions_column:first-child {
             border-left: none;
             padding-left: 0;
@@ -99,64 +95,186 @@
             </div>
         </div>
 
-        <form action="" method="POST">
+        <form id="examForm" action="{{ route('studentExamSubmit') }}" method="POST">
             @csrf
+            <input type="hidden" name="exam_id" id="examId" value="{{ $exam->id }}">
             @php
-    $bengali_letters = ['ক', 'খ', 'গ', 'ঘ', 'ঙ', 'চ', 'ছ', 'জ']; // extend if needed
-@endphp
-
-<div class="question_body">
-    @php
-        $total = $questions->count();
-        $half = ceil($total / 2);
-    @endphp
-
-    <div class="questions_wrapper">
-        <div class="questions_column">
-            @foreach($questions->slice(0, $half) as $question)
-                <div class="question_item">
-                    <p><strong>{{ $loop->iteration }}.</strong> {{ $question->question_text }}</p>
-
-                    @foreach($question->options as $index => $option)
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" 
-                                   name="answers[{{ $question->id }}]" 
-                                   value="{{ $option->id }}" 
-                                   id="option{{ $option->id }}">
-                            <label class="form-check-label" for="option{{ $option->id }}">
-                                {{ $bengali_letters[$index] ?? chr(65+$index) }}. {{ $option->option_text }}
-                            </label>
-                        </div>
-                    @endforeach
+                $bengali_letters = ['ক', 'খ', 'গ', 'ঘ', 'ঙ', 'চ', 'ছ', 'জ'];
+            @endphp
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label>মোবাইল নম্বর <span class="text-danger">**</span></label>
+                        <input type="text" name="mobile" class="form-control" placeholder="আপনার মোবাইল নম্বর লিখুন"
+                            required>
+                    </div>
                 </div>
-            @endforeach
-        </div>
 
-        <div class="questions_column">
-            @foreach($questions->slice($half) as $question)
-                <div class="question_item">
-                    <p><strong>{{ $loop->iteration + $half }}.</strong> {{ $question->question_text }}</p>
-
-                    @foreach($question->options as $index => $option)
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" 
-                                   name="answers[{{ $question->id }}]" 
-                                   value="{{ $option->id }}" 
-                                   id="option{{ $option->id }}">
-                            <label class="form-check-label" for="option{{ $option->id }}">
-                                {{ $bengali_letters[$index] ?? chr(65+$index) }}. {{ $option->option_text }}
-                            </label>
-                        </div>
-                    @endforeach
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label>আপনার নাম লিখুন <span class="text-danger">**</span></label>
+                        <input type="text" name="name" class="form-control" placeholder="আপনার নাম লিখুন"
+                            required>
+                    </div>
                 </div>
-            @endforeach
-        </div>
-    </div>
-</div>
+
+            </div>
+
+
+            <div class="question_body">
+                @php
+                    $total = $questions->count();
+                    $half = ceil($total / 2);
+                @endphp
+
+                <div class="questions_wrapper">
+                    <div class="questions_column">
+                        @foreach ($questions->slice(0, $half) as $question)
+                            <div class="question_item">
+                                <p><strong>{{ $loop->iteration }}.</strong> {{ $question->question_text }}</p>
+
+                                @foreach ($question->options as $index => $option)
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio"
+                                            name="answers[{{ $question->id }}]" value="{{ $option->id }}"
+                                            id="option{{ $option->id }}">
+                                        <label class="form-check-label" for="option{{ $option->id }}">
+                                            {{ $bengali_letters[$index] ?? chr(65 + $index) }}.
+                                            {{ $option->option_text }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <div class="questions_column">
+                        @foreach ($questions->slice($half) as $question)
+                            <div class="question_item">
+                                <p><strong>{{ $loop->iteration + $half }}.</strong> {{ $question->question_text }}</p>
+
+                                @foreach ($question->options as $index => $option)
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio"
+                                            name="answers[{{ $question->id }}]" value="{{ $option->id }}"
+                                            id="option{{ $option->id }}">
+                                        <label class="form-check-label" for="option{{ $option->id }}">
+                                            {{ $bengali_letters[$index] ?? chr(65 + $index) }}.
+                                            {{ $option->option_text }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
 
             <button type="submit" class="btn btn-primary">Submit Exam</button>
         </form>
     </div>
+
+    <script src="{{ asset('source/plugins/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('source/plugins/toaster/toastr.min.js') }}"></script>
+
+    <script>
+        $(document).ready(function() {
+
+            $('#examForm').on('submit', function(e) {
+                e.preventDefault();
+
+                let name = $('input[name="name"]').val().trim();
+                let mobile = $('input[name="mobile"]').val().trim();
+                let checkedAnswers = $('input[type="radio"]:checked').length;
+
+                // ✅ Name validation
+                if (name === '') {
+                    toastr.error('আপনার নাম লিখুন');
+                    return;
+                }
+
+                if (name.length < 3) {
+                    toastr.warning('নাম কমপক্ষে ৩ অক্ষরের হতে হবে');
+                    return;
+                }
+
+                // ✅ Mobile validation
+                if (mobile === '') {
+                    toastr.error('মোবাইল নম্বর লিখুন');
+                    return;
+                }
+
+                if (!/^01[3-9]\d{8}$/.test(mobile)) {
+                    toastr.error('সঠিক মোবাইল নম্বর দিন (১১ সংখ্যা)');
+                    return;
+                }
+
+                // ✅ At least 1 answer required
+                if (checkedAnswers < 1) {
+                    toastr.warning('কমপক্ষে একটি প্রশ্নের উত্তর দিন');
+                    return;
+                }
+
+                let form = $(this);
+                let formData = form.serialize();
+
+                let submitBtn = form.find('button[type="submit"]');
+                submitBtn.prop('disabled', true).text('Submitting...');
+
+                $.ajax({
+                    url: form.attr('action'),
+                    method: "POST",
+                    data: formData,
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            toastr.success(response.message);
+
+                            // Optional: show stats in console
+                            console.log('Correct:', response.data?.correct);
+                            console.log('Wrong:', response.data?.wrong);
+                            console.log('Obtained Marks:', response.data?.obtained_marks);
+                        } else {
+                            toastr.error(response.message);
+                        }
+                    },
+                    error: function(xhr) {
+                        toastr.error('Something went wrong!');
+                    },
+                    complete: function() {
+                        submitBtn.prop('disabled', false).text('Submit Exam');
+                    }
+                });
+
+            });
+
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            @if (session('success'))
+                showToast('success', "{{ session('success') }}");
+            @endif
+
+            @if (session('error'))
+                showToast('error', "{{ session('error') }}");
+            @endif
+
+            @if (session('warning'))
+                showToast('warning', "{{ session('warning') }}");
+            @endif
+        });
+
+        function showToast(type, message) {
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "timeOut": "5000"
+            };
+
+            toastr[type](message);
+        }
+    </script>
 </body>
 
 </html>

@@ -9,4 +9,6 @@ Route::get('/', function () {
 
 Route::prefix('/s')->group(function(){
     Route::get('/{code}',[StudentExamController::class,'studentExam'])->name('studentExam');
+    Route::post('/exam-submit',[StudentExamController::class,'studentExamSubmit'])->name('studentExamSubmit');
+    // Route::get('/view-exam-result');
 });
