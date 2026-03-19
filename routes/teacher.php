@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PdfController;
 use App\Http\Controllers\TeacherAuthController;
 use App\Http\Controllers\TeacherDashbaordController;
 use App\Http\Controllers\TeacherPreviousExamCategoryController;
@@ -12,7 +13,6 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('t')->group(function () {
     Route::get('/', [TeacherAuthController::class, 'teacherLogin'])->name('teacherLogin');
     Route::post('/login-request', [TeacherAuthController::class, 'teacherLoginRequest'])->name('teacherLoginRequest');
-
 
     Route::get('/dashboard', [TeacherDashbaordController::class, 'teacherDashboard'])->name('teacherDashboard');
 
@@ -56,15 +56,17 @@ Route::prefix('t')->group(function () {
     });
 
     Route::prefix('question-builder')->group(function () {
-        Route::get('/',[TeacherQuestionBuilderController::class, 'questionBuilderIndex'])->name('questionBuilderIndex');
+        Route::get('/', [TeacherQuestionBuilderController::class, 'questionBuilderIndex'])->name('questionBuilderIndex');
         Route::get('/exam-form/{id?}', [TeacherQuestionBuilderController::class, 'questionBuilderExamForm'])->name('questionBuilderExamForm');
         Route::post('/exam-save/{id?}', [TeacherQuestionBuilderController::class, 'questionBuilderExamSave'])->name('questionBuilderExamSave');
-        
+
         Route::any('/select-questions/{id}', [TeacherQuestionBuilderController::class, 'selectExamQuestion'])->name('selectExamQuestion');
-        Route::get('/load-chapters',[TeacherQuestionBuilderController::class, 'loadChapters'])->name('loadChapters');
+        Route::get('/load-chapters', [TeacherQuestionBuilderController::class, 'loadChapters'])->name('loadChapters');
         Route::post('/save-questions/{id}', [TeacherQuestionBuilderController::class, 'questionBuilderQuestionSave'])->name('questionBuilderQuestionSave');
-        Route::get('/view-questions/{id}',[TeacherQuestionBuilderController::class,'questionBuilderQuestionView'])->name('questionBuilderQuestionView');
-        Route::get('/delete-question/{exam_id}/{question_id}',[TeacherQuestionBuilderController::class,'questionBuilderQuestionDelete'])->name('questionBuilderQuestionDelete');
-        Route::get('/view-result/{id}',[TeacherQuestionBuilderController::class,'questionBuilderViewResult'])->name('questionBuilderViewResult');
+        Route::get('/view-questions/{id}', [TeacherQuestionBuilderController::class, 'questionBuilderQuestionView'])->name('questionBuilderQuestionView');
+        Route::get('/delete-question/{exam_id}/{question_id}', [TeacherQuestionBuilderController::class, 'questionBuilderQuestionDelete'])->name('questionBuilderQuestionDelete');
+        Route::get('/view-result/{id}', [TeacherQuestionBuilderController::class, 'questionBuilderViewResult'])->name('questionBuilderViewResult');
+
+        Route::get('/download-result/{id}', [PdfController::class, 'downloadResult'])->name('downloadResult');
     });
 });
