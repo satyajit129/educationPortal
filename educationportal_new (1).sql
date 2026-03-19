@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 18, 2026 at 08:50 PM
+-- Generation Time: Mar 19, 2026 at 05:51 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -77,6 +77,13 @@ CREATE TABLE `cache` (
   `expiration` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `cache`
+--
+
+INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
+('laravel-cache-boost.roster.scan', 'a:2:{s:6:\"roster\";O:21:\"Laravel\\Roster\\Roster\":3:{s:13:\"\0*\0approaches\";O:29:\"Illuminate\\Support\\Collection\":2:{s:8:\"\0*\0items\";a:0:{}s:28:\"\0*\0escapeWhenCastingToString\";b:0;}s:11:\"\0*\0packages\";O:32:\"Laravel\\Roster\\PackageCollection\":2:{s:8:\"\0*\0items\";a:6:{i:0;O:22:\"Laravel\\Roster\\Package\":6:{s:9:\"\0*\0direct\";b:1;s:13:\"\0*\0constraint\";s:5:\"^12.0\";s:10:\"\0*\0package\";E:37:\"Laravel\\Roster\\Enums\\Packages:LARAVEL\";s:14:\"\0*\0packageName\";s:17:\"laravel/framework\";s:10:\"\0*\0version\";s:7:\"12.52.0\";s:6:\"\0*\0dev\";b:0;}i:1;O:22:\"Laravel\\Roster\\Package\":6:{s:9:\"\0*\0direct\";b:0;s:13:\"\0*\0constraint\";s:7:\"v0.3.13\";s:10:\"\0*\0package\";E:37:\"Laravel\\Roster\\Enums\\Packages:PROMPTS\";s:14:\"\0*\0packageName\";s:15:\"laravel/prompts\";s:10:\"\0*\0version\";s:6:\"0.3.13\";s:6:\"\0*\0dev\";b:0;}i:2;O:22:\"Laravel\\Roster\\Package\":6:{s:9:\"\0*\0direct\";b:0;s:13:\"\0*\0constraint\";s:6:\"v0.5.9\";s:10:\"\0*\0package\";E:33:\"Laravel\\Roster\\Enums\\Packages:MCP\";s:14:\"\0*\0packageName\";s:11:\"laravel/mcp\";s:10:\"\0*\0version\";s:5:\"0.5.9\";s:6:\"\0*\0dev\";b:1;}i:3;O:22:\"Laravel\\Roster\\Package\":6:{s:9:\"\0*\0direct\";b:1;s:13:\"\0*\0constraint\";s:5:\"^1.24\";s:10:\"\0*\0package\";E:34:\"Laravel\\Roster\\Enums\\Packages:PINT\";s:14:\"\0*\0packageName\";s:12:\"laravel/pint\";s:10:\"\0*\0version\";s:6:\"1.27.1\";s:6:\"\0*\0dev\";b:1;}i:4;O:22:\"Laravel\\Roster\\Package\":6:{s:9:\"\0*\0direct\";b:1;s:13:\"\0*\0constraint\";s:5:\"^1.41\";s:10:\"\0*\0package\";E:34:\"Laravel\\Roster\\Enums\\Packages:SAIL\";s:14:\"\0*\0packageName\";s:12:\"laravel/sail\";s:10:\"\0*\0version\";s:6:\"1.53.0\";s:6:\"\0*\0dev\";b:1;}i:5;O:22:\"Laravel\\Roster\\Package\":6:{s:9:\"\0*\0direct\";b:1;s:13:\"\0*\0constraint\";s:7:\"^11.5.3\";s:10:\"\0*\0package\";E:37:\"Laravel\\Roster\\Enums\\Packages:PHPUNIT\";s:14:\"\0*\0packageName\";s:15:\"phpunit/phpunit\";s:10:\"\0*\0version\";s:7:\"11.5.53\";s:6:\"\0*\0dev\";b:1;}}s:28:\"\0*\0escapeWhenCastingToString\";b:0;}s:21:\"\0*\0nodePackageManager\";E:43:\"Laravel\\Roster\\Enums\\NodePackageManager:NPM\";}s:9:\"timestamp\";i:1773926321;}', 1774012721);
+
 -- --------------------------------------------------------
 
 --
@@ -117,8 +124,8 @@ CREATE TABLE `exams` (
 --
 
 INSERT INTO `exams` (`id`, `title`, `code`, `duration`, `marks_per_question`, `negative_mark_id`, `total_mark`, `pass_mark`, `number_of_question_want_to_add`, `watermark_text`, `created_by`, `status`, `created_at`, `updated_at`) VALUES
-(8, 'test', 'X9F10P', 10, 1, 2, 45.00, NULL, 45, NULL, 1, 'published', '2026-03-17 09:26:38', '2026-03-18 12:51:04'),
-(9, 'বাংলা : সমর্থক শব্দ , বিপরীত শব্দ ও পরিভাষা', 'IYJRMS', 20, 1, 2, 30.00, NULL, 30, NULL, 1, 'published', '2026-03-17 09:37:56', '2026-03-18 13:27:42');
+(8, 'test', 'X9F10P', 10, 1, 2, 30.00, NULL, 30, NULL, 1, 'published', '2026-03-17 09:26:38', '2026-03-19 06:39:04'),
+(9, 'বাংলা : সমর্থক শব্দ , বিপরীত শব্দ ও পরিভাষা', 'IYJRMS', 20, 1, 2, 30.00, NULL, 30, NULL, 1, 'published', '2026-03-17 09:37:56', '2026-03-19 06:38:53');
 
 -- --------------------------------------------------------
 
@@ -2265,7 +2272,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('AI372wRGP9owFeFyoMijnqljpfeOgxc0rLcjBvn7', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiUkpEVE52bktGTVY5T1RSamdxTHl4OWZRM0psYk1Odmt6NzNnVXB4OSI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzA6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9zL0lZSlJNUyI7czo1OiJyb3V0ZSI7czoxMToic3R1ZGVudEV4YW0iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO30=', 1773863363);
+('RdOcMq8s043VDAfjijzrzeHhrYYO6Ef7hphv2SI2', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoibWNsTjFUWkJDQjBiRHJPR0RleERab0gyaTZOMHZtczJNVUdISVh1MyI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzA6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9zL0lZSlJNUyI7czo1OiJyb3V0ZSI7czoxMToic3R1ZGVudEV4YW0iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO30=', 1773929977);
 
 -- --------------------------------------------------------
 
@@ -2276,7 +2283,8 @@ INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, 
 CREATE TABLE `users` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `name` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `mobile` varchar(255) DEFAULT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) NOT NULL,
   `remember_token` varchar(100) DEFAULT NULL,
@@ -2288,8 +2296,68 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Test User', 'test@example.com', '2026-02-17 23:58:29', '$2y$12$HXiXK4yGNd0SejtZfXdwrOSccmEKjq8l7vsiWt5XNRSbhYsmxVWqC', '7o38pkMAGqXjgL3jrQrPR660qRMHF6q2YaAqPjKrr6N2YLxMvWEJc4wUGZCT', '2026-02-17 23:58:30', '2026-02-17 23:58:30');
+INSERT INTO `users` (`id`, `name`, `email`, `mobile`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
+(1, 'Test User', 'test@example.com', NULL, '2026-02-17 23:58:29', '$2y$12$HXiXK4yGNd0SejtZfXdwrOSccmEKjq8l7vsiWt5XNRSbhYsmxVWqC', '7o38pkMAGqXjgL3jrQrPR660qRMHF6q2YaAqPjKrr6N2YLxMvWEJc4wUGZCT', '2026-02-17 23:58:30', '2026-02-17 23:58:30'),
+(2, 'বৈষ্ণব পদাবলি', NULL, '01953240076', NULL, '$2y$12$xiM1eabqMQivuqAcWkamJeZrQTiq2WEluMixPmiIZ9rkiKpU.TdBO', NULL, '2026-03-19 01:54:23', '2026-03-19 08:19:37');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_answers`
+--
+
+CREATE TABLE `user_answers` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_attempt_id` bigint(20) UNSIGNED NOT NULL,
+  `exam_id` bigint(20) UNSIGNED NOT NULL,
+  `question_id` bigint(20) UNSIGNED NOT NULL,
+  `selected_option_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `correct_option_id` bigint(20) UNSIGNED NOT NULL,
+  `is_correct` tinyint(1) DEFAULT 0,
+  `question_mark` decimal(8,2) DEFAULT 0.00,
+  `obtained_mark` decimal(8,2) DEFAULT 0.00,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `user_answers`
+--
+
+INSERT INTO `user_answers` (`id`, `user_attempt_id`, `exam_id`, `question_id`, `selected_option_id`, `correct_option_id`, `is_correct`, `question_mark`, `obtained_mark`, `created_at`, `updated_at`) VALUES
+(6, 1, 9, 7, 29, 29, 1, 1.00, 1.00, '2026-03-19 08:19:37', '2026-03-19 08:19:37');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_attempts`
+--
+
+CREATE TABLE `user_attempts` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `exam_id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `mobile` varchar(20) NOT NULL,
+  `total_questions` int(11) DEFAULT 0,
+  `answered_questions` int(11) DEFAULT 0,
+  `correct_answers` int(11) DEFAULT 0,
+  `wrong_answers` int(11) DEFAULT 0,
+  `skipped_questions` int(11) DEFAULT 0,
+  `right_answer_mark` decimal(8,2) DEFAULT 0.00,
+  `wrong_answer_mark` decimal(8,2) DEFAULT 0.00,
+  `obtained_marks` decimal(8,2) DEFAULT 0.00,
+  `submitted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `user_attempts`
+--
+
+INSERT INTO `user_attempts` (`id`, `user_id`, `exam_id`, `name`, `mobile`, `total_questions`, `answered_questions`, `correct_answers`, `wrong_answers`, `skipped_questions`, `right_answer_mark`, `wrong_answer_mark`, `obtained_marks`, `submitted_at`, `created_at`, `updated_at`) VALUES
+(1, 2, 9, 'বৈষ্ণব পদাবলি', '01953240076', 15, 1, 1, 0, 14, 1.00, 0.00, 1.00, '2026-03-19 08:19:37', '2026-03-19 06:34:07', '2026-03-19 08:19:37');
 
 -- --------------------------------------------------------
 
@@ -2526,6 +2594,18 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `users_email_unique` (`email`);
 
 --
+-- Indexes for table `user_answers`
+--
+ALTER TABLE `user_answers`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `user_attempts`
+--
+ALTER TABLE `user_attempts`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `years`
 --
 ALTER TABLE `years`
@@ -2644,6 +2724,18 @@ ALTER TABLE `question_options`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `user_answers`
+--
+ALTER TABLE `user_answers`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `user_attempts`
+--
+ALTER TABLE `user_attempts`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
