@@ -20,4 +20,8 @@ class StudentExamController extends Controller
     {
         return $this->studentExamService->handleStudentExamSubmit($request);
     }
+    public function studentExamQuestion($id)
+    {
+        return $this->studentExamService->renderStudentExamQuestion($id);
+    }
 }

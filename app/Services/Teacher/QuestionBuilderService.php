@@ -17,7 +17,7 @@ class QuestionBuilderService
 {
     public function renderQuestionBuilderIndex()
     {
-        $exams = Exam::with('negativeMark')->latest()->get();
+        $exams = Exam::with('negativeMark')->withCount('userAttempts')->latest()->get();
         return view('teacher.pages.question_builder_index', compact('exams'));
     }
     public function renderQuestionBuilderExamForm($id = null)

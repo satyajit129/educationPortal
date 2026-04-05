@@ -32,7 +32,7 @@
     <div class="container d-flex justify-content-center align-items-center">
         <div class="card shadow-lg" style="max-width: 500px; width: 100%;">
             <div class="card-body">
-                <h4 class="text-center mb-4">শিক্ষক লগইন</h4>
+                <h4 class="text-center mb-4">Benzir's Job Aid</h4>
 
                 <form action="{{ route('teacherLoginRequest') }}" method="POST">
                     @csrf

@@ -9,6 +9,7 @@ use App\Models\Question;
 use App\Models\User;
 use App\Models\UserAnswer;
 use App\Models\UserAttempt;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
@@ -40,10 +41,12 @@ class StudentExamService
             // Step 2: Get or create user and update name if changed
             $user = User::firstOrNew(['mobile' => $request->mobile]);
             $user->name = $request->name;
+            // $user->
 
             // Only set password if user is new
             if (!$user->exists) {
                 $user->password = '123456'; // will hash automatically
+                $user->is_student = true;
             }
 
             $user->save();
@@ -143,10 +146,14 @@ class StudentExamService
                 'obtained_marks' => $obtainedMarks,
             ]);
 
+                // ✅ Auto login
+            Auth::login($user);
+
             // Step 8: Return success response
             return response()->json([
                 'status' => 'success',
-                'message' => 'Exam submitted successfully!'
+                'message' => 'Exam submitted successfully!',
+                'route' => route('studentDashboard') // 👈 send URL here
             ], 200);
         } catch (\Throwable $th) {
             return response()->json([
@@ -154,5 +161,22 @@ class StudentExamService
                 'message' => $th->getMessage()
             ], 500);
         }
+    }
+
+
+    public function renderStudentExamQuestion($id)
+    {
+        $attempt = UserAttempt::with('exam.questions.options')->findOrFail($id);
+
+        // Ensure the authenticated user owns this attempt
+        if ($attempt->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        return view('student.pages.exam_question', [
+            'exam' => $attempt->exam,
+            'questions' => $attempt->exam->questions,
+            'previousAnswers' => $attempt->answers->keyBy('question_id')
+        ]);
     }
 }

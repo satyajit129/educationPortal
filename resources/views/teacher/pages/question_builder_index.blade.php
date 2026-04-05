@@ -74,9 +74,14 @@
                                         <i class="mdi mdi-content-copy"></i> কপি লিঙ্ক
                                     </button>
 
-                                    <a class="btn btn-sm btn-warning" href="{{ route('questionBuilderViewResult', $exam->id) }}">
-    <i class="mdi mdi-eye-outline me-1"></i> ফলাফল দেখুন
-</a>
+                                   @if($exam->user_attempts_count > 0)
+                                        <a class="btn btn-sm btn-warning" 
+                                        href="{{ route('questionBuilderViewResult', $exam->id) }}">
+                                            <i class="mdi mdi-eye-outline"></i>
+                                            ফলাফল দেখুন
+                                            <span class="badge bg-success">{{ $exam->user_attempts_count }}</span>
+                                        </a>
+                                    @endif
                                 </div>
 
                             </div>

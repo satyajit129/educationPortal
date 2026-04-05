@@ -6,8 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ asset('source/css/style.css') }}">
     <link href="https://fonts.maateen.me/kalpurush/font.css" rel="stylesheet">
+    {{-- <link href="{{ asset('fonts/font.css') }}" rel="stylesheet"> --}}
     <link href="{{ asset('source/plugins/toaster/toastr.min.css') }}" rel="stylesheet" />
 
     <style>
@@ -17,6 +19,19 @@
             font-style: normal;
             font-variation-settings:
                 "wdth" 100;
+        }
+
+        #examTimer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #000;
+            color: #fff;
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 8px;
+            z-index: 9999;
+            font-weight: bold;
         }
 
         .question_header {
@@ -71,6 +86,10 @@
                 border-left: none;
                 padding-left: 0;
             }
+
+            #examTimer {
+                padding: 1px 1px;
+            }
         }
 
         .question_item {
@@ -83,6 +102,9 @@
 
 <body>
     <div class="container">
+        <div id="examTimer">
+            ⏱️ সময় বাকি: <span id="timeLeft"></span>
+        </div>
         <div class="question_header">
             <div class="batch_info">
                 <h5 class="batch_name">Benzir's Job Aid</h5>
@@ -180,14 +202,63 @@
     <script>
         $(document).ready(function() {
 
+            // ✅ CSRF Setup
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            // ✅ SINGLE FUNCTION FOR SUBMIT (manual + auto)
+            function submitExam() {
+
+                let form = $('#examForm');
+                let formData = form.serialize();
+                let submitBtn = form.find('button[type="submit"]');
+
+                submitBtn.prop('disabled', true).text('Submitting...');
+
+                $.ajax({
+                    url: form.attr('action'),
+                    method: "POST",
+                    data: formData,
+                    success: function(response) {
+
+                        if (response.status === 'success') {
+                            toastr.success(response.message);
+
+                            console.log('Correct:', response.data?.correct);
+                            console.log('Wrong:', response.data?.wrong);
+                            console.log('Obtained Marks:', response.data?.obtained_marks);
+
+                            if (response.route) {
+                                setTimeout(function() {
+                                    window.location.href = response.route;
+                                }, 1500);
+                            }
+
+                        } else {
+                            toastr.error(response.message);
+                        }
+                    },
+                    error: function() {
+                        toastr.error('Something went wrong!');
+                    },
+                    complete: function() {
+                        submitBtn.prop('disabled', false).text('Submit Exam');
+                    }
+                });
+            }
+
+            // ✅ MANUAL SUBMIT
             $('#examForm').on('submit', function(e) {
-                e.preventDefault();
+                e.preventDefault(); // 🔥 IMPORTANT
 
                 let name = $('input[name="name"]').val().trim();
                 let mobile = $('input[name="mobile"]').val().trim();
                 let checkedAnswers = $('input[type="radio"]:checked').length;
 
-                // ✅ Name validation
+                // ✅ Validations
                 if (name === '') {
                     toastr.error('আপনার নাম লিখুন');
                     return;
@@ -198,7 +269,6 @@
                     return;
                 }
 
-                // ✅ Mobile validation
                 if (mobile === '') {
                     toastr.error('মোবাইল নম্বর লিখুন');
                     return;
@@ -209,46 +279,56 @@
                     return;
                 }
 
-                // ✅ At least 1 answer required
                 if (checkedAnswers < 1) {
                     toastr.warning('কমপক্ষে একটি প্রশ্নের উত্তর দিন');
                     return;
                 }
 
-                let form = $(this);
-                let formData = form.serialize();
-
-                let submitBtn = form.find('button[type="submit"]');
-                submitBtn.prop('disabled', true).text('Submitting...');
-
-                $.ajax({
-                    url: form.attr('action'),
-                    method: "POST",
-                    data: formData,
-                    success: function(response) {
-                        if (response.status === 'success') {
-                            toastr.success(response.message);
-
-                            // Optional: show stats in console
-                            console.log('Correct:', response.data?.correct);
-                            console.log('Wrong:', response.data?.wrong);
-                            console.log('Obtained Marks:', response.data?.obtained_marks);
-                        } else {
-                            toastr.error(response.message);
-                        }
-                    },
-                    error: function(xhr) {
-                        toastr.error('Something went wrong!');
-                    },
-                    complete: function() {
-                        submitBtn.prop('disabled', false).text('Submit Exam');
-                    }
-                });
-
+                // ✅ CALL FUNCTION
+                submitExam();
             });
 
         });
     </script>
+
+
+    <script>
+        $(document).ready(function() {
+
+            let totalMinutes = {{ $exam->duration }};
+            let totalSeconds = totalMinutes * 60;
+
+            function formatTime(seconds) {
+                let mins = Math.floor(seconds / 60);
+                let secs = seconds % 60;
+                return mins.toString().padStart(2, '0') + ':' + secs.toString().padStart(2, '0');
+            }
+
+            function updateTimer() {
+                $('#timeLeft').text(formatTime(totalSeconds));
+
+                if (totalSeconds <= 0) {
+                    clearInterval(timerInterval);
+
+                    toastr.warning('সময় শেষ! Exam auto submit হচ্ছে...');
+
+                    // ✅ AUTO SUBMIT USING SAME FUNCTION
+                    $('#examForm').off('submit'); // prevent validation block
+                    $('#examForm button[type="submit"]').prop('disabled', true);
+
+                    // trigger submit manually
+                    $('#examForm').submit();
+                }
+
+                totalSeconds--;
+            }
+
+            updateTimer();
+
+            let timerInterval = setInterval(updateTimer, 1000);
+        });
+    </script>
+
     <script>
         $(document).ready(function() {
             @if (session('success'))

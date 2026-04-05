@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 19, 2026 at 05:51 PM
+-- Generation Time: Apr 05, 2026 at 10:38 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -125,7 +125,7 @@ CREATE TABLE `exams` (
 
 INSERT INTO `exams` (`id`, `title`, `code`, `duration`, `marks_per_question`, `negative_mark_id`, `total_mark`, `pass_mark`, `number_of_question_want_to_add`, `watermark_text`, `created_by`, `status`, `created_at`, `updated_at`) VALUES
 (8, 'test', 'X9F10P', 10, 1, 2, 30.00, NULL, 30, NULL, 1, 'published', '2026-03-17 09:26:38', '2026-03-19 06:39:04'),
-(9, 'বাংলা : সমর্থক শব্দ , বিপরীত শব্দ ও পরিভাষা', 'IYJRMS', 20, 1, 2, 30.00, NULL, 30, NULL, 1, 'published', '2026-03-17 09:37:56', '2026-03-19 06:38:53');
+(9, 'বাংলা : সমর্থক শব্দ , বিপরীত শব্দ ও পরিভাষা', 'IYJRMS', 2, 1, 2, 30.00, NULL, 30, NULL, 1, 'published', '2026-03-17 09:37:56', '2026-04-04 21:41:35');
 
 -- --------------------------------------------------------
 
@@ -2272,7 +2272,10 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('RdOcMq8s043VDAfjijzrzeHhrYYO6Ef7hphv2SI2', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoibWNsTjFUWkJDQjBiRHJPR0RleERab0gyaTZOMHZtczJNVUdISVh1MyI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzA6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9zL0lZSlJNUyI7czo1OiJyb3V0ZSI7czoxMToic3R1ZGVudEV4YW0iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO30=', 1773929977);
+('OO34tRqDa1bCDy46DXexws1N2PKZ6deKMYmSekSH', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiQ2l6V0tETjRiM1pzYnE0c2lnSzd5SzRIQVdNZUpyVXdmSUpGR2xMayI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzA6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9zL0lZSlJNUyI7czo1OiJyb3V0ZSI7czoxMToic3R1ZGVudEV4YW0iO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO30=', 1775370295),
+('PNviBAia97xc29lRP7yeXJKLKywCi6zaahMiQhvo', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiWjhnRG5vRTVlckpDN0JzRUozM01HRUozMlh0c3VCZTg1d3ZreU5NRCI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzM6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9zL2Rhc2hib2FyZCI7czo1OiJyb3V0ZSI7czoxNjoic3R1ZGVudERhc2hib2FyZCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7fQ==', 1775371600),
+('RAZ98XaHlom7l2ER0uINTxT5tEYbuPIvFOytxpAM', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiZlk0S0lMYXV1RndpbWYyWExzSGNCbnZJeklBUmlsUDZJN0hjZlA0dSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzM6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9zL2Rhc2hib2FyZCI7czo1OiJyb3V0ZSI7czoxMToic3R1ZGVudEV4YW0iO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO30=', 1775371135),
+('RcpC6kuPiWmvRAHItlSQVZIYM1dIkXH7zcRmM167', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoibUtkN3Y2RGtYWkdNWkhXbHhqQ0JodzN4bW8yeDhMV0pndW1JNUxUTCI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDA6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC90L3F1ZXN0aW9uLWJ1aWxkZXIiO3M6NToicm91dGUiO3M6MjA6InF1ZXN0aW9uQnVpbGRlckluZGV4Ijt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Mjt9', 1775370174);
 
 -- --------------------------------------------------------
 
@@ -2283,6 +2286,7 @@ INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, 
 CREATE TABLE `users` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `name` varchar(255) NOT NULL,
+  `is_student` tinyint(4) NOT NULL,
   `email` varchar(255) DEFAULT NULL,
   `mobile` varchar(255) DEFAULT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
@@ -2296,9 +2300,9 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `mobile`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Test User', 'test@example.com', NULL, '2026-02-17 23:58:29', '$2y$12$HXiXK4yGNd0SejtZfXdwrOSccmEKjq8l7vsiWt5XNRSbhYsmxVWqC', '7o38pkMAGqXjgL3jrQrPR660qRMHF6q2YaAqPjKrr6N2YLxMvWEJc4wUGZCT', '2026-02-17 23:58:30', '2026-02-17 23:58:30'),
-(2, 'বৈষ্ণব পদাবলি', NULL, '01953240076', NULL, '$2y$12$xiM1eabqMQivuqAcWkamJeZrQTiq2WEluMixPmiIZ9rkiKpU.TdBO', NULL, '2026-03-19 01:54:23', '2026-03-19 08:19:37');
+INSERT INTO `users` (`id`, `name`, `is_student`, `email`, `mobile`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
+(1, 'Test User', 0, 'test@example.com', NULL, '2026-02-17 23:58:29', '$2y$12$HXiXK4yGNd0SejtZfXdwrOSccmEKjq8l7vsiWt5XNRSbhYsmxVWqC', '7o38pkMAGqXjgL3jrQrPR660qRMHF6q2YaAqPjKrr6N2YLxMvWEJc4wUGZCT', '2026-02-17 23:58:30', '2026-02-17 23:58:30'),
+(2, 'বৈষ্ণব পদাবলি', 1, NULL, '01953240076', NULL, '$2y$12$xiM1eabqMQivuqAcWkamJeZrQTiq2WEluMixPmiIZ9rkiKpU.TdBO', NULL, '2026-03-19 01:54:23', '2026-04-05 00:31:20');
 
 -- --------------------------------------------------------
 
@@ -2325,7 +2329,7 @@ CREATE TABLE `user_answers` (
 --
 
 INSERT INTO `user_answers` (`id`, `user_attempt_id`, `exam_id`, `question_id`, `selected_option_id`, `correct_option_id`, `is_correct`, `question_mark`, `obtained_mark`, `created_at`, `updated_at`) VALUES
-(6, 1, 9, 7, 29, 29, 1, 1.00, 1.00, '2026-03-19 08:19:37', '2026-03-19 08:19:37');
+(18, 1, 9, 6, 22, 22, 1, 1.00, 1.00, '2026-04-05 00:35:32', '2026-04-05 00:35:32');
 
 -- --------------------------------------------------------
 
@@ -2357,7 +2361,7 @@ CREATE TABLE `user_attempts` (
 --
 
 INSERT INTO `user_attempts` (`id`, `user_id`, `exam_id`, `name`, `mobile`, `total_questions`, `answered_questions`, `correct_answers`, `wrong_answers`, `skipped_questions`, `right_answer_mark`, `wrong_answer_mark`, `obtained_marks`, `submitted_at`, `created_at`, `updated_at`) VALUES
-(1, 2, 9, 'বৈষ্ণব পদাবলি', '01953240076', 15, 1, 1, 0, 14, 1.00, 0.00, 1.00, '2026-03-19 08:19:37', '2026-03-19 06:34:07', '2026-03-19 08:19:37');
+(1, 2, 9, 'বৈষ্ণব পদাবলি', '01953240076', 15, 1, 1, 0, 14, 1.00, 0.00, 1.00, '2026-04-05 00:35:32', '2026-03-19 06:34:07', '2026-04-05 00:35:32');
 
 -- --------------------------------------------------------
 
@@ -2730,7 +2734,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `user_answers`
 --
 ALTER TABLE `user_answers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `user_attempts`

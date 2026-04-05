@@ -19,4 +19,8 @@ class UserAttempt extends Model
     {
         return $this->hasMany(UserAnswer::class);
     }
+    public function exam()
+{
+    return $this->belongsTo(Exam::class);
+}
 }
