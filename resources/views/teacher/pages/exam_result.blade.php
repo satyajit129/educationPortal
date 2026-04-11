@@ -4,9 +4,9 @@
     <div class="card card-default">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h2 class="card-title mb-0">{{ $exam->title ?? '' }} - এর ফলাফল এর তালিকা </h2>
-            <a href="{{ route('downloadResult', $exam->id) }}" class="btn btn-sm btn-success">
+            {{-- <a href="{{ route('downloadResult', $exam->id) }}" class="btn btn-sm btn-success">
                 <i class="mdi mdi-download me-1"></i> PDF ডাউনলোড
-            </a>
+            </a> --}}
         </div>
         <div class="card-body">
             <div class="table-responsive">
