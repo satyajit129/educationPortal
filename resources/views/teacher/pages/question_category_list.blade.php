@@ -38,7 +38,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="text-center">কোনো ক্যাটাগরি পাওয়া যায়নি</td>
+                        <td colspan="5" class="text-center">কোনো ক্যাটাগরি পাওয়া যায়নি</td>
                     </tr>
                 @endforelse
             </tbody>

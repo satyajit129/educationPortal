@@ -44,9 +44,9 @@
                             সময়: {{ $attempt->exam->duration }} মিনিট
                         </small>
 
-                        <a href="#" class="btn btn-sm btn-outline-primary">
+                        {{-- <a href="#" class="btn btn-sm btn-outline-primary">
                             ফলাফল দেখুন
-                        </a>
+                        </a> --}}
                     </div>
 
                 </div>
