@@ -17,6 +17,7 @@ Route::prefix('/s')->group(function () {
 
     Route::middleware([IsStudent::class])->group(function () {
         Route::get('/dashboard', [StudentDashbaordController::class, 'studentDashboard'])->name('studentDashboard');
+        Route::get('/logout', [StudentAuthController::class, 'studentLogout'])->name('studentLogout');
         Route::get('/exam-question/{id}',[StudentExamController::class, 'studentExamQuestion'])->name('studentExamQuestion');
     });
 

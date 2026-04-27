@@ -5,13 +5,13 @@
     <div class="row">
         @foreach ($attempts as $attempt)
             <div class="col-md-6 col-xl-4">
-                <div class="card shadow-sm border-0 mb-4" style="overflow: hidden;">
+                <div class="card card-default mb-1" style="overflow: hidden;">
 
                     <!-- Header -->
-                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <div class="card-header d-flex justify-content-between align-items-center">
                         <h6 class="mb-0">{{ $attempt->exam->title }}</h6>
                         <span class="badge bg-light text-dark">
-                            {{ $attempt->created_at->format('d M Y') }}
+                            {{ $attempt->created_at->format('d M Y H:i A') }}
                         </span>
                     </div>
 
@@ -44,9 +44,9 @@
                             সময়: {{ $attempt->exam->duration }} মিনিট
                         </small>
 
-                        {{-- <a href="#" class="btn btn-sm btn-outline-primary">
+                        <a href="{{ route('studentExamQuestion', $attempt->exam_id) }}" class="btn btn-sm btn-outline-primary">
                             ফলাফল দেখুন
-                        </a> --}}
+                        </a>
                     </div>
 
                 </div>

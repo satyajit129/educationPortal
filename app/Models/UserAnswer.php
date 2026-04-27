@@ -18,4 +18,8 @@ class UserAnswer extends Model
     {
         return $this->belongsTo(Question::class);
     }
+    public function option()
+    {
+        return $this->belongsTo(QuestionOption::class, 'selected_option_id'); // ✅ fixed column
+    }
 }

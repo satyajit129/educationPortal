@@ -102,8 +102,8 @@ class StudentExamService
 
                 $isCorrect = (int)$selectedOptionId === (int)$correctOptionId;
 
-                $obtainedMark = $isCorrect 
-                    ? $rightAnswerMark 
+                $obtainedMark = $isCorrect
+                    ? $rightAnswerMark
                     : -$wrongAnswerMark;
 
                 if ($isCorrect) $correct++;
@@ -146,7 +146,7 @@ class StudentExamService
                 'obtained_marks' => $obtainedMarks,
             ]);
 
-                // ✅ Auto login
+            // ✅ Auto login
             Auth::login($user);
 
             // Step 8: Return success response
@@ -166,12 +166,13 @@ class StudentExamService
 
     public function renderStudentExamQuestion($id)
     {
-        $attempt = UserAttempt::with('exam.questions.options')->findOrFail($id);
-
-        // Ensure the authenticated user owns this attempt
-        if ($attempt->user_id !== Auth::id()) {
-            abort(403);
-        }
+        $attempt = UserAttempt::with([
+            'exam.questions.options',
+            'answers.option'
+        ])
+            ->where('exam_id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
 
         return view('student.pages.exam_question', [
             'exam' => $attempt->exam,

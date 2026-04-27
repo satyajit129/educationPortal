@@ -58,7 +58,7 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary btn-pill" data-dismiss="modal">Cancel</button>
         
-        <a href="" class="btn btn-danger btn-pill">Yes Logout!</a>
+        <a href="{{ route('studentLogout') }}" class="btn btn-danger btn-pill">Yes Logout!</a>
       </div>
     </div>
   </div>
