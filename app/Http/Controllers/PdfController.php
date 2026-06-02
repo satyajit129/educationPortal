@@ -17,7 +17,7 @@ class PdfController extends Controller
     public function downloadResult($id)
     {
         $exam = Exam::findOrFail($id);
-        $userAttempts = $exam->userAttempts()->get();
+        $userAttempts = $exam->userAttempts()->orderBy('obtained_marks', 'desc')->get();
 
         return $this->PDFService->generateExamResultPdf($exam, $userAttempts);
     }

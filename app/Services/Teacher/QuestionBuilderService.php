@@ -250,7 +250,7 @@ class QuestionBuilderService
     public function renderQuestionBuilderViewResult($id)
     {
         $exam = Exam::findOrFail($id);
-        $userAttemts = UserAttempt::where('exam_id', $exam->id)->orderBy('obtained_marks')->get();
+        $userAttemts = UserAttempt::where('exam_id', $exam->id)->orderBy('obtained_marks', 'desc')->get();
         return view('teacher.pages.exam_result', compact('exam', 'userAttemts'));
     }
 }
